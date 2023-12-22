@@ -1,6 +1,7 @@
 import { Player } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
 import { queueUnban } from "../../commands/moderation/unban.js";
+//import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util";
 import { paradoxui } from "../paradoxui.js";
@@ -12,7 +13,7 @@ export function uiUNBAN(unbanResult: ModalFormResponse, player: Player) {
     }
     const [textField, deleteUnban] = unbanResult.formValues;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {

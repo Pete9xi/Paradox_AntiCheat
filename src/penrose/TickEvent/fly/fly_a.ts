@@ -2,7 +2,6 @@ import { world, EntityQueryOptions, GameMode, system, Vector3, PlayerLeaveAfterE
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 interface PlayerData {
     fallingData: boolean[]; // Array to record falling behavior
@@ -56,39 +55,54 @@ function analyzePlayerData(player: Player) {
     const playerData = playerDataMap.get(player.id);
     if (!playerData) return;
 
-    let isPotentialFlying = false;
-
     const fallingData = playerData.fallingData;
     const surroundedByAirData = playerData.surroundedByAirData;
 
+    // Check if enough data is available for analysis
     const minDataCount = 3;
     if (fallingData.length < minDataCount || surroundedByAirData.length < minDataCount) {
-        return;
+        // console.log("Not enough data for analysis yet.");
+        return; // Not enough data for analysis yet
     }
 
-    const fallingCount = fallingData.filter((isFalling) => isFalling).length;
-    const airCount = surroundedByAirData.filter((isSurroundedByAir) => isSurroundedByAir).length;
+    // Check if falling data indicates potential flying
+    let isPotentialFlying = false;
 
-    // Adjust threshold based on observation
-    const threshold = 2;
+    let fallingCount = 0;
+    let airCount = 0;
 
-    if (fallingCount - airCount >= threshold) {
+    for (let i = 0; i < minDataCount; i++) {
+        const isFalling = fallingData[fallingData.length - 1 - i];
+        const isSurroundedByAir = surroundedByAirData[surroundedByAirData.length - 1 - i];
+
+        if (isFalling) {
+            fallingCount++;
+        }
+
+        if (isSurroundedByAir) {
+            airCount++;
+        }
+    }
+
+    // Analyze the majority of the data
+    if (fallingCount > airCount) {
         // Majority indicates falling
-        // Set isPotentialFlying to false
         isPotentialFlying = false;
-    } else if (airCount - fallingCount >= threshold) {
+    } else if (airCount > fallingCount) {
         // Majority indicates surrounded by air (potential flying)
-        // Set isPotentialFlying to true
         isPotentialFlying = true;
     }
 
-    fallingData.shift();
-    surroundedByAirData.shift();
-
     if (isPotentialFlying) {
-        // Take appropriate action
+        // console.log("Player is potentially flying. Taking appropriate action.");
+        // Player is potentially flying, take appropriate action
         handlePotentialFlying(player);
+    } else {
+        // console.log("Player is not potentially flying.");
     }
+
+    // Clear the data for the player after analysis
+    playerDataMap.delete(player.id);
 }
 
 function checkSurroundedByAir(player: Player): boolean {
@@ -117,7 +131,7 @@ function handlePotentialFlying(player: Player): void {
             dimension: player.dimension,
             rotation: { x: 0, y: 0 },
             facingLocation: { x: 0, y: 0, z: 0 },
-            checkForBlocks: true,
+            checkForBlocks: false,
             keepVelocity: false,
         });
 
@@ -130,8 +144,7 @@ function handlePotentialFlying(player: Player): void {
 
 function flya(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const flyABoolean = configuration.modules.flyA.enabled;
+    const flyABoolean = dynamicPropertyRegistry.get("flya_b");
     // Unsubscribe if disabled in-game
     if (flyABoolean === false) {
         world.afterEvents.playerLeave.unsubscribe(onPlayerLogout);
@@ -146,14 +159,9 @@ function flya(id: number) {
     // run as each player who are in survival
     for (const player of filteredPlayers) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
         // Skip if they have permission
         if (uniqueId === player.name) {
-            continue;
-        }
-        //Check if the player is gliding... temp fix!
-        const glideCheck = player.isGliding;
-        if (glideCheck) {
             continue;
         }
 

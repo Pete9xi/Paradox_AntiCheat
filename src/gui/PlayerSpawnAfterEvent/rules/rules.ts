@@ -1,7 +1,6 @@
 import { PlayerSpawnAfterEvent, world } from "@minecraft/server";
 import { ShowRules } from "../../showrules/showrules.js";
 import { dynamicPropertyRegistry } from "../../../penrose/WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 /**
  * Handles the player spawn event and displays join rules.
@@ -25,9 +24,10 @@ export function onJoinRules(object: PlayerSpawnAfterEvent) {
 
 async function handledleOnJoinRules(object: PlayerSpawnAfterEvent) {
     //Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
+    const showrulesBoolean = dynamicPropertyRegistry.get("showrules_b");
+
     // Unsubscribe if disabled in-game
-    if (configuration.modules.showrules.enabled === false) {
+    if (showrulesBoolean === false) {
         world.afterEvents.playerSpawn.unsubscribe(onJoinRules);
         return;
     }

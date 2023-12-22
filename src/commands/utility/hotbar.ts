@@ -1,16 +1,16 @@
-import { ChatSendAfterEvent, Player } from "@minecraft/server";
+import { ChatSendAfterEvent, Player, Vector3, world } from "@minecraft/server";
+import config from "../../data/config.js";
 import { Hotbar } from "../../penrose/TickEvent/hotbar/hotbar.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
 const configMessageBackup = new WeakMap();
 // Dummy object
 const dummy: object = [];
 
-function hotbarHelp(player: Player, prefix: string, hotbarBoolean: boolean, setting: boolean) {
+function hotbarHelp(player: Player, prefix: string, hotbarBoolean: string | number | boolean | Vector3) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.hotbar) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -54,7 +54,7 @@ export function hotbar(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
@@ -62,15 +62,15 @@ export function hotbar(message: ChatSendAfterEvent, args: string[]) {
     }
 
     // Get Dynamic Property Boolean
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
+    const hotbarBoolean = dynamicPropertyRegistry.get("hotbar_b");
 
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.hotbar) {
-        return hotbarHelp(player, prefix, configuration.modules.hotbar.enabled, configuration.customcommands.hotbar);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.hotbar) {
+        return hotbarHelp(player, prefix, hotbarBoolean);
     }
 
     /**
@@ -79,33 +79,33 @@ export function hotbar(message: ChatSendAfterEvent, args: string[]) {
      * Reload server to reset this in memory
      */
     if (configMessageBackup.has(dummy) === false) {
-        configMessageBackup.set(dummy, configuration.modules.hotbar.message);
+        configMessageBackup.set(dummy, config.modules.hotbar.message);
     }
 
-    if ((configuration.modules.hotbar.enabled === false && !args.length) || (configuration.modules.hotbar.enabled === false && args[0].toLowerCase() !== "disable")) {
+    if ((hotbarBoolean === false && !args.length) || (hotbarBoolean === false && args[0].toLowerCase() !== "disable")) {
         // Allow
-        configuration.modules.hotbar.enabled = true;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("hotbar_b", true);
+        world.setDynamicProperty("hotbar_b", true);
         if (args.length >= 1) {
-            configuration.modules.hotbar.message = args.join(" ");
+            config.modules.hotbar.message = args.join(" ");
         } else {
-            configuration.modules.hotbar.message = configMessageBackup.get(dummy);
+            config.modules.hotbar.message = configMessageBackup.get(dummy);
         }
         sendMsg("@a[tag=paradoxOpped]", `§7${player.name}§f has enabled §6Hotbar`);
         Hotbar();
-    } else if (configuration.modules.hotbar.enabled === true && args.length === 1 && args[0].toLowerCase() === "disable") {
+    } else if (hotbarBoolean === true && args.length === 1 && args[0].toLowerCase() === "disable") {
         // Deny
-        configuration.modules.hotbar.enabled = false;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("hotbar_b", false);
+        world.setDynamicProperty("hotbar_b", false);
         sendMsg("@a[tag=paradoxOpped]", `§7${player.name}§f has disabled §6Hotbar`);
-    } else if ((configuration.modules.hotbar.enabled === true && args.length >= 1) || (configuration.modules.hotbar.enabled === true && !args.length)) {
+    } else if ((hotbarBoolean === true && args.length >= 1) || (hotbarBoolean === true && !args.length)) {
         if (args.length >= 1) {
-            configuration.modules.hotbar.message = args.join(" ");
+            config.modules.hotbar.message = args.join(" ");
         } else {
-            configuration.modules.hotbar.message = configMessageBackup.get(dummy);
+            config.modules.hotbar.message = configMessageBackup.get(dummy);
         }
         sendMsg("@a[tag=paradoxOpped]", `§7${player.name}§f has updated §6Hotbar`);
     } else {
-        return hotbarHelp(player, prefix, configuration.modules.hotbar.enabled, configuration.customcommands.hotbar);
+        return hotbarHelp(player, prefix, hotbarBoolean);
     }
 }

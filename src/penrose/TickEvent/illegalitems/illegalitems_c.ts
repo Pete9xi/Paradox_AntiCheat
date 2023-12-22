@@ -1,13 +1,11 @@
 import { EntityItemComponent, EntityQueryOptions, world, system } from "@minecraft/server";
 import { illegalitems } from "../../../data/itemban.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function illegalitemsc(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const illegalItemsCBoolean = configuration.modules.illegalitemsC.enabled;
-    const antiShulkerBoolean = configuration.modules.antishulker.enabled;
+    const illegalItemsCBoolean = dynamicPropertyRegistry.get("illegalitemsc_b");
+    const antiShulkerBoolean = dynamicPropertyRegistry.get("antishulker_b");
     const shulkerItems = ["minecraft:shulker_box", "minecraft:undyed_shulker_box"];
 
     // Unsubscribe if disabled in-game

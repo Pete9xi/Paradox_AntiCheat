@@ -2,14 +2,12 @@ import { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../../../penrose/WorldInitializeAfterEvent/registry";
 import { uiSPAMMER } from "../../../modules/uiSpammer";
-import ConfigInterface from "../../../../interfaces/Config";
 
 export function spammersHandler(player: Player) {
     const modulesspamui = new ModalFormData();
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const spammerABoolean = configuration.modules.spammerA.enabled;
-    const spammerBBoolean = configuration.modules.spammerB.enabled;
-    const spammerCBoolean = configuration.modules.spammerC.enabled;
+    const spammerABoolean = dynamicPropertyRegistry.get("spammera_b") as boolean;
+    const spammerBBoolean = dynamicPropertyRegistry.get("spammerb_b") as boolean;
+    const spammerCBoolean = dynamicPropertyRegistry.get("spammerc_b") as boolean;
     modulesspamui.title("§4Paradox Modules - Spam Modules§4");
     modulesspamui.toggle("Spammer A - Checks for messages sent while moving:", spammerABoolean);
     modulesspamui.toggle("Spammer B - Checks for messages sent while swinging:", spammerBBoolean);

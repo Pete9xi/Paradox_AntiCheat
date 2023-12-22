@@ -1,6 +1,4 @@
-# .eslintignore
-
-node_modules/
+node_modules
 .gitignore
 .distignore
 .mcattributes
@@ -8,12 +6,11 @@ node_modules/
 package-lock.json
 package.json
 tsconfig.json
-.github/
-.vs/
-.vscode/
-.git/
+.github
+.vs
+.vscode
+.git
 .prettierignore
 *.md
 bedrock-server-*
-/docs/
-build/
+/docs

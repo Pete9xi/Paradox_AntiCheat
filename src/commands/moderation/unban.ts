@@ -1,7 +1,7 @@
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
+import config from "../../data/config.js";
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
 export const queueUnban = new Set<string>();
 
@@ -18,9 +18,9 @@ function listQueue(queued: Set<string>, player: Player) {
     }
 }
 
-function unbanHelp(player: Player, prefix: string, setting: boolean) {
+function unbanHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.unban) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -52,27 +52,25 @@ export function unban(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Are there arguments
     if (!args.length) {
-        return unbanHelp(player, prefix, configuration.customcommands.unban);
+        return unbanHelp(player, prefix);
     }
 
     // Was help requested
     const argCheck = args[0];
     if (argCheck && args[0].toLowerCase() === "help") {
-        return unbanHelp(player, prefix, configuration.customcommands.unban);
+        return unbanHelp(player, prefix);
     }
 
     // List the queue if requested

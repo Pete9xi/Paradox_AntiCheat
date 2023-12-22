@@ -1,4 +1,4 @@
-![Paradox](../Media/Paradox_Title.png)
+<img src="https://i.imgur.com/oi5NwOp.png" alt="Let's Go">
 
 ## How
 

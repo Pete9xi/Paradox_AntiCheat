@@ -2,7 +2,6 @@ import { world, Player, EntityHitEntityAfterEvent, system } from "@minecraft/ser
 import { MinecraftEntityTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
 import { dynamicPropertyRegistry } from "../WorldInitializeAfterEvent/registry";
 import { flag } from "../../util";
-import ConfigInterface from "../../interfaces/Config";
 
 // Define interface for a player click object
 interface Click {
@@ -11,10 +10,6 @@ interface Click {
 
 interface PlayerWithClicks extends Player {
     clicks?: Click[];
-}
-
-function getRegistry() {
-    return dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
 }
 
 /**
@@ -40,8 +35,7 @@ function getPlayerCPS(player: PlayerWithClicks): number {
  */
 function cpsValidation(id: number, max: number): void {
     // Get Dynamic Property for autoclicker
-    const configuration = getRegistry();
-    const autoclickerBoolean = configuration.modules.autoclicker.enabled;
+    const autoclickerBoolean = dynamicPropertyRegistry.get("autoclicker_b") as boolean;
 
     // Unsubscribe if autoclicker is disabled in-game
     if (autoclickerBoolean === false) {
@@ -66,8 +60,7 @@ function cpsValidation(id: number, max: number): void {
  */
 function autoclicker(event: EntityHitEntityAfterEvent): void {
     // Get Dynamic Property for autoclicker
-    const configuration = getRegistry();
-    const autoclickerBoolean = configuration.modules.autoclicker.enabled;
+    const autoclickerBoolean = dynamicPropertyRegistry.get("autoclicker_b") as boolean;
 
     // Unsubscribe if autoclicker is disabled in-game
     if (autoclickerBoolean === false) {
@@ -86,7 +79,7 @@ function autoclicker(event: EntityHitEntityAfterEvent): void {
     const playerWithClicks = damagingEntity as PlayerWithClicks;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(damagingEntity, damagingEntity?.id);
+    const uniqueId = dynamicPropertyRegistry.get(damagingEntity?.id);
 
     // Skip if they have permission
     if (uniqueId === damagingEntity.name) {

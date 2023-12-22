@@ -1,117 +1,54 @@
 {
     "name": "paradox-anticheat",
-    "version": "3.4.6",
+    "version": "3.4.4",
     "productName": "Paradox-AntiCheat",
     "description": "A utility to fight against malicious hackers on Bedrock Edition",
     "private": true,
-    "type": "module",
     "devDependencies": {
-        "@types/fs-extra": "11.0.3",
-        "@types/glob": "8.1.0",
         "@types/node": "20.8.8",
+        "@types/glob": "8.1.0",
+        "@types/fs-extra": "11.0.3",
         "7zip-bin": "5.2.0",
-        "adm-zip": "0.5.10",
-        "chmodr": "1.2.0",
-        "docsify-cli": "4.4.4",
         "finalhandler": "1.2.0",
-        "fs-extra": "11.1.1",
-        "glob": "10.3.10",
+        "prettier": "3.0.3",
         "serve-static": "1.15.0",
         "typescript": "5.2.2",
-        "eslint": "8.54.0",
-        "@typescript-eslint/parser": "6.11.0",
-        "@typescript-eslint/eslint-plugin": "6.11.0",
-        "prettier": "3.1.0",
-        "eslint-plugin-prettier": "5.0.1",
-        "eslint-config-prettier": "9.0.0"
+        "fs-extra": "11.1.1",
+        "chmodr": "1.2.0",
+        "glob": "10.3.10",
+        "adm-zip": "0.5.10"
     },
     "dependencies": {
-        "@minecraft/server": "1.8.0-beta.1.20.50-stable",
-        "@minecraft/server-ui": "1.2.0-beta.1.20.50-stable"
+        "@minecraft/server": "1.7.0-beta.1.20.40-stable",
+        "@minecraft/server-ui": "1.2.0-beta.1.20.40-stable"
     },
-    "eslintConfig": {
-        "parserOptions": {
-            "ecmaVersion": "latest",
-            "sourceType": "module"
-        },
-        "extends": [
-            "eslint:recommended",
-            "plugin:@typescript-eslint/recommended",
-            "prettier"
-        ],
-        "plugins": [
-            "@typescript-eslint",
-            "prettier"
-        ],
-        "env": {
-            "node": true
-        },
-        "rules": {
-            "indent": [
-                "error",
-                4,
-                {
-                    "SwitchCase": 1
-                }
-            ],
-            "semi": [
-                "error",
-                "always"
-            ],
-            "comma-style": [
-                "error",
-                "last"
-            ],
-            "linebreak-style": [
-                "error",
-                "unix"
-            ],
-            "no-constant-condition": [
-                "error",
-                {
-                    "checkLoops": false
-                }
-            ],
-            "no-empty": [
-                "error",
-                {
-                    "allowEmptyCatch": true
-                }
-            ],
-            "no-prototype-builtins": "off",
-            "prettier/prettier": [
-                "error",
-                {
-                    "trailingComma": "es5",
-                    "tabWidth": 4,
-                    "useTabs": false,
-                    "semi": true,
-                    "printWidth": 250
-                }
-            ]
-        }
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "useTabs": false,
+        "semi": true,
+        "printWidth": 250
     },
     "scripts": {
-        "postinstall": "npm install --prefix src @minecraft/vanilla-data@1.20.50 && npm install --prefix src crypto-es@2.1.0",
+        "postinstall": "npm install --prefix src @minecraft/vanilla-data@1.20.40 && npm install --prefix src crypto-es@2.1.0",
         "enableMcLoopback": "CheckNetIsolation.exe LoopbackExempt -a -p=S-1-15-2-1958404141-86561845-1752920682-3514627264-368642714-62675701-733520436",
         "enableMcPreviewLoopback": "CheckNetIsolation.exe LoopbackExempt -a -p=S-1-15-2-424268864-5579737-879501358-346833251-474568803-887069379-4040235476",
-        "format": "eslint --fix .",
+        "format": "npx prettier --write --ignore-path .prettierignore ./",
+        "server": "node server.js",
         "test-build": "node test-build.js",
         "linux//": " --- BUILD (Linux) --- ",
-        "server": "node_modules/docsify-cli/bin/docsify serve docs",
         "clean": "rm -rf build/",
         "mkDirs": "mkdir -p build",
         "copy:vanilla-data": "cp -R src/node_modules build/scripts",
         "copy:assets": "cp -R animation_controllers/ animations entities/ functions/ CHANGELOG.md LICENSE manifest.json pack_icon.png README.md build",
-        "build": "npm run format; ./node_modules/typescript/bin/tsc -p tsconfig.json; npm run copy:assets; npm run copy:vanilla-data",
+        "build": "./node_modules/typescript/bin/tsc -p tsconfig.json; npm run copy:assets; npm run copy:vanilla-data",
         "dist": "npm run clean; npm run format; npm run build; cd build; zip -0 -r Paradox-AntiCheat-v${npm_package_version}.mcpack .",
         "windows//": " --- BUILD (Windows) --- ",
-        "server_win": "node node_modules\\docsify-cli\\bin\\docsify serve docs",
         "clean_win": "rd /s /q build>nul 2>&1|echo.>nul",
         "mkdir_win": "@if exist build (rd /s /q build && mkdir build) else (mkdir build)",
         "copy:win-vanilla-data": "@powershell Copy-Item -Path ^(\\\"src\\node_modules\\\"^) -Destination \"build\\scripts\" -Recurse",
         "copy_assets_win": "@powershell Copy-Item -Path ^(\\\"animation_controllers\\\",\\\"animations\\\",\\\"entities\\\",\\\"functions\\\",\\\"CHANGELOG.md\\\",\\\"LICENSE\\\",\\\"manifest.json\\\",\\\"pack_icon.png\\\",\\\"README.md\\\"^) -Destination \"build\" -Recurse",
-        "build_win": "npm run format && npm run mkdir_win 1>nul && node node_modules\\typescript\\bin\\tsc -p tsconfig.json && npm run copy_assets_win 1>nul && npm run copy:win-vanilla-data 1>nul",
+        "build_win": "npm run mkdir_win 1>nul && node node_modules\\typescript\\bin\\tsc -p tsconfig.json && npm run copy_assets_win 1>nul && npm run copy:win-vanilla-data 1>nul",
         "build_win_noscript": "npm run mkdir_win 1>nul && npm run copy_assets_win 1>nul",
         "zip_win": "npm run clean_win && npm run build_win && cd build && node -e \"const path = require('path'); const arch = process.arch.startsWith('arm') ? 'arm64' : (process.arch === 'x32' ? 'ia32' : 'x64'); const executable = path.join(__dirname, '..', 'node_modules', '7zip-bin', 'win', arch, '7za'); require('child_process').execSync(`${executable} a -tzip Paradox-AntiCheat-v%npm_package_version%.zip .`);\"",
         "dist_win": "npm run clean_win && npm run format && npm run build_win 1>nul && npm run zip_win 1>nul && powershell -Command \"Rename-Item -Path 'build\\Paradox-AntiCheat-v%npm_package_version%.zip' -NewName 'Paradox-AntiCheat-v%npm_package_version%.mcpack'\""

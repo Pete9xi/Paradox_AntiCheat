@@ -1,8 +1,8 @@
 import { world, EntityQueryOptions, system } from "@minecraft/server";
+import config from "../../../data/config.js";
 import { sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { WorldExtended } from "../../../classes/WorldExtended/World.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function verifypermission() {
     const filter: EntityQueryOptions = {
@@ -15,23 +15,21 @@ function verifypermission() {
         const hash = player.getDynamicProperty("hash");
         const salt = player.getDynamicProperty("salt");
 
-        const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
         // Use either the operator's ID or the encryption password as the key
-        const key = configuration.encryption.password ? configuration.encryption.password : player.id;
+        const key = config.encryption.password ? config.encryption.password : player.id;
 
         // Generate the hash
         const encode = (world as WorldExtended).hashWithSalt(salt as string, key);
         if (encode && encode === hash) {
             // Make sure their unique ID exists in case of a reload
-            if (dynamicPropertyRegistry.hasProperty(player, player.id) === false) {
-                dynamicPropertyRegistry.setProperty(player, player.id, player.name);
+            if (dynamicPropertyRegistry.has(player.id) === false) {
+                dynamicPropertyRegistry.set(player.id, player.name);
             }
             continue;
         } else {
             player.setDynamicProperty("hash");
             player.setDynamicProperty("salt");
-            dynamicPropertyRegistry.deleteProperty(player, player.id);
+            dynamicPropertyRegistry.delete(player.id);
             player.removeTag("paradoxOpped");
         }
 

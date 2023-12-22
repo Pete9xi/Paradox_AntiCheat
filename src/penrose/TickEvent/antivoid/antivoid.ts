@@ -1,10 +1,9 @@
 import { world, EntityQueryOptions, GameMode, system } from "@minecraft/server";
 //import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-let savedValue: number;
-let flagPlayer: boolean = false;
-let isFlying: boolean = false;
-// eslint-disable-next-line
+var savedValue: number;
+var flagPlayer: boolean = false;
+var isFlying: boolean = false;
 function antiVoid(_id: number) {
     //exclude players who are in creative.
     const gm: EntityQueryOptions = {
@@ -14,7 +13,7 @@ function antiVoid(_id: number) {
 
     for (const player of filteredPlayers) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
         // Skip if they have permission
         if (uniqueId === player.name) {
             continue;
@@ -33,7 +32,7 @@ function antiVoid(_id: number) {
             isFlying = true;
         }
         if (player.isOnGround == true) {
-            // @ts-expect-error testing
+            // @ts-ignore
             lastSavedCord = saveOrGetValue("get");
             if (player.location.y - lastSavedCord >= 3 && isFlying == false) {
                 if (flagPlayer == false) {
@@ -43,7 +42,7 @@ function antiVoid(_id: number) {
             }
         }
     }
-    // @ts-expect-error testing
+    // @ts-ignore
     function saveOrGetValue(action: string, value: number) {
         if (action === "save") {
             // Save the value

@@ -14,7 +14,7 @@ function freezePlayer(player: Player) {
         dimension: world.getDimension("overworld"),
         rotation: player.getRotation(),
         facingLocation: player.getViewDirection(),
-        checkForBlocks: true,
+        checkForBlocks: false,
         keepVelocity: false,
     });
 
@@ -60,7 +60,7 @@ function unfreezePlayer(player: Player) {
                     dimension: world.getDimension(originalDimensionName),
                     rotation: player.getRotation(),
                     facingLocation: player.getViewDirection(),
-                    checkForBlocks: true,
+                    checkForBlocks: false,
                     keepVelocity: false,
                 });
             }
@@ -101,7 +101,7 @@ const freezePlayers = () => {
                         dimension: world.getDimension(originalDimension as string),
                         rotation: player.getRotation(),
                         facingLocation: player.getViewDirection(),
-                        checkForBlocks: true,
+                        checkForBlocks: false,
                         keepVelocity: false,
                     });
                 }

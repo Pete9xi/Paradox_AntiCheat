@@ -1,17 +1,15 @@
 import { Player, world } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { sendMsgToPlayer } from "../../../util";
+import config from "../../../data/config";
 import { uiSAVEDLOCATIONS } from "../../playerui/uiSavedLocations";
 import { WorldExtended } from "../../../classes/WorldExtended/World";
-import ConfigInterface from "../../../interfaces/Config";
-import { dynamicPropertyRegistry } from "../../../penrose/WorldInitializeAfterEvent/registry";
 
 export function locationHandler(player: Player) {
     //No Opped Menu to show Saved Locations
     const savedlocationsui = new ModalFormData();
     // Hash the coordinates for security
     const salt = world.getDynamicProperty("crypt");
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
     const tags = player.getTags();
     const tagsLength = tags.length;
     let counter = 0;
@@ -51,7 +49,7 @@ export function locationHandler(player: Player) {
     savedlocationsui.toggle("Teleport to the selected location:", false);
     savedlocationsui.toggle("Deletes the selected Location:", false);
     savedlocationsui.textField("Enter a name to save your current Location:", "");
-    if (configuration.customcommands.sethome === true && configuration.customcommands.delhome === true && configuration.customcommands.listhome === true && configuration.customcommands.gohome === true) {
+    if (config.customcommands.sethome === true && config.customcommands.delhome === true && config.customcommands.listhome === true && config.customcommands.gohome === true) {
         savedlocationsui
             .show(player)
             .then((savedlocationsResult) => {

@@ -1,8 +1,8 @@
 import { world, PlayerPlaceBlockAfterEvent, Vector3, PlayerPlaceBlockBeforeEvent, PlayerLeaveAfterEvent } from "@minecraft/server";
+import config from "../../../data/config.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { flag } from "../../../util.js";
 import { MinecraftBlockTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function afterreacha(
     object: PlayerPlaceBlockAfterEvent,
@@ -12,8 +12,7 @@ function afterreacha(
     afterPlayerLeaveCallback: (arg: PlayerLeaveAfterEvent) => void
 ) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const reachABoolean = configuration.modules.reachA.enabled;
+    const reachABoolean = dynamicPropertyRegistry.get("reacha_b");
 
     // Unsubscribe if disabled in-game
     if (reachABoolean === false) {
@@ -28,7 +27,7 @@ function afterreacha(
     const { block, player, dimension } = object;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Skip if they have permission
     if (uniqueId === player.name) {
@@ -50,7 +49,7 @@ function afterreacha(
     const distanceSquared = dx * dx + dy * dy + dz * dz;
     const roundedDistanceSquared = Math.floor(distanceSquared); // Round down the distanceSquared
 
-    if (roundedDistanceSquared > configuration.modules.reachA.reach * configuration.modules.reachA.reach) {
+    if (roundedDistanceSquared > config.modules.reachA.reach * config.modules.reachA.reach) {
         dimension.getBlock({ x: x, y: y, z: z }).setType(MinecraftBlockTypes.Air);
         flag(player, "Reach", "A", "Placement", null, null, "reach", Math.sqrt(distanceSquared).toFixed(3), false);
     }

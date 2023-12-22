@@ -3,8 +3,8 @@ import { ModalFormResponse } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util";
 import { paradoxui } from "../paradoxui.js";
+import config from "../../data/config.js";
 import { WorldExtended } from "../../classes/WorldExtended/World.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
 //Function provided by Visual1mpact
 export function uiDEOP(opResult: ModalFormResponse, onlineList: string[], player: Player) {
@@ -26,10 +26,8 @@ export function uiDEOP(opResult: ModalFormResponse, onlineList: string[], player
     const memberHash = member.getDynamicProperty("hash");
     const memberSalt = member.getDynamicProperty("salt");
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Use either the operator's ID or the encryption password as the key
-    const key = configuration.encryption.password ? configuration.encryption.password : member.id;
+    const key = config.encryption.password ? config.encryption.password : member.id;
 
     // Generate the hash
     const memberEncode: string = (world as WorldExtended).hashWithSalt(memberSalt as string, key);
@@ -37,7 +35,7 @@ export function uiDEOP(opResult: ModalFormResponse, onlineList: string[], player
     if (memberEncode && memberHash !== undefined && memberHash === memberEncode) {
         member.setDynamicProperty("hash");
         member.setDynamicProperty("salt");
-        dynamicPropertyRegistry.deleteProperty(member, member.id);
+        dynamicPropertyRegistry.delete(member.id);
         member.removeTag("paradoxOpped");
         if (player.name !== member.name) {
             sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${member.name}§f is no longer Paradox-Opped.`);

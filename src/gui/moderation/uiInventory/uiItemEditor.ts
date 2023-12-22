@@ -50,7 +50,8 @@ export function uiItemEditorTransfer(InvEditorUIResult: ModalFormResponse, onlin
             // Loop through the inventory and add items to the itemArray
             for (let i = 0; i < maxSlots; i++) {
                 const item = memberPlayerinv.container.getItem(i);
-                if (!item?.typeId) {
+                if (item?.typeId) {
+                } else {
                     freeSlot = i;
                     break;
                 }
@@ -67,7 +68,8 @@ export function uiItemEditorTransfer(InvEditorUIResult: ModalFormResponse, onlin
             // Loop through the inventory and add items to the itemArray
             for (let i = 0; i < maxSlots; i++) {
                 const item = memberPlayerinv.container.getItem(i);
-                if (!item?.typeId) {
+                if (item?.typeId) {
+                } else {
                     freeSlot = i;
                     break;
                 }

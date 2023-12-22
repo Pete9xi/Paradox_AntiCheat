@@ -1,7 +1,6 @@
 import { ChatSendAfterEvent, world } from "@minecraft/server";
 import { kickablePlayers } from "../../../kickcheck";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry";
-import ConfigInterface from "../../../interfaces/Config";
 
 function extractTagInfo(message: string) {
     const tagPrefix = ";tag:";
@@ -23,9 +22,7 @@ function extractTagInfo(message: string) {
 
 function afterantispam(msg: ChatSendAfterEvent) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
-    const antiSpamBoolean = configuration.modules.antispam.enabled;
+    const antiSpamBoolean = dynamicPropertyRegistry.get("antispam_b");
 
     // Unsubscribe if disabled in-game
     if (antiSpamBoolean === false) {
@@ -37,7 +34,7 @@ function afterantispam(msg: ChatSendAfterEvent) {
     const player = msg.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Ignore those with permissions
     if (uniqueId === player.name) {

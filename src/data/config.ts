@@ -110,7 +110,6 @@ export default {
         },
         namespoofB: {
             enabled: true,
-            // eslint-disable-next-line no-control-regex
             banregex: /[^\x00-\x7F]|[/:\\*?"<>]|^\.$|\.$/gu,
             // Deny any invalid character not within the scope of this regex
             // Only kick because playstation and switch consoles are able to rename themselves
@@ -160,10 +159,11 @@ export default {
         },
         antikbA: {
             enabled: false,
-            velocityIntensity: -0.078,
+            magnitude: -0.078,
         },
         antiscaffoldA: {
             enabled: true,
+            max: 13,
         },
         antinukerA: {
             enabled: true,
@@ -193,6 +193,7 @@ export default {
             enabled: false,
         },
         setHome: {
+            enabled: true,
             max: 5,
         },
         goHome: {
@@ -230,7 +231,6 @@ export default {
         },
         showrules: {
             enabled: true,
-            kick: false,
             rule1: "Rule1: No hacking allowed.",
             rule2: "Rule2: Don't grief other players' builds.",
             rule3: "Rule3: Be kind to everyone on the server.",
@@ -265,15 +265,7 @@ export default {
         antiphaseA: {
             enabled: true,
         },
-        lockdown: {
-            enabled: false,
-        },
         spawnprotection: {
-            enabled: false,
-            radius: 0,
-            vector3: { x: 0, y: 0, z: 0 },
-        },
-        autoclicker: {
             enabled: false,
         },
     },

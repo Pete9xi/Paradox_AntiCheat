@@ -41,7 +41,7 @@ async function handleUIInventory(inventoryUIResult: ModalFormResponse, onlineLis
         }
     }
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped.`);
@@ -130,7 +130,7 @@ async function handleUIInventory(inventoryUIResult: ModalFormResponse, onlineLis
         ["birch_fence", "blocks/planks_birch"],
         ["birch_fence_gate", "blocks/planks_birch"],
         ["birch_hanging_sign", "blocks/birch_hanging_sign"],
-        ["birch_log", "blocks/log_birch_top"],
+        ["birch_log", "log_birch"],
         ["birch_pressure_plate", "blocks/planks_birch"],
         ["birch_stairs", "blocks/planks_birch"],
         ["birch_standing_sign", "items/sign_birch"],
@@ -1257,7 +1257,7 @@ async function handleUIInventory(inventoryUIResult: ModalFormResponse, onlineLis
     }
 
     // Output the updated itemArray(Debugging)
-    // console.log(itemArray);
+    console.log(itemArray);
 
     //once the loop is done then move to the next part
 

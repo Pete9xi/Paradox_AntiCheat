@@ -1,10 +1,10 @@
-import { Player } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
+import config from "../../data/config.js";
 import { Hotbar } from "../../penrose/TickEvent/hotbar/hotbar.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util";
 import { paradoxui } from "../paradoxui.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
 const configMessageBackup = new WeakMap();
 // Dummy object
@@ -17,30 +17,29 @@ export function uiHOTBAR(hotbarResult: ModalFormResponse, player: Player) {
     }
     const [HotbarMessage, HotbarToggle, HotbarRestDefaultMessageToggle] = hotbarResult.formValues;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
+
+    // Get Dynamic Property Boolean
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to configure the hotbar`);
     }
-
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     if (configMessageBackup.has(dummy) === false) {
-        configMessageBackup.set(dummy, configuration.modules.hotbar.message);
+        configMessageBackup.set(dummy, config.modules.hotbar.message);
     }
     if (HotbarToggle === true && HotbarRestDefaultMessageToggle === false) {
         // Allow
-        configuration.modules.hotbar.enabled = true;
-        configuration.modules.hotbar.message = HotbarMessage as string;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("hotbar_b", true);
+        world.setDynamicProperty("hotbar_b", true);
+        config.modules.hotbar.message = HotbarMessage as string;
         sendMsg("@a[tag=paradoxOpped]", `§7${player.name}§f has enabled §6Hotbar`);
         Hotbar();
     }
     if (HotbarToggle === false) {
         // Deny
-        configuration.modules.hotbar.enabled = false;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("hotbar_b", false);
+        world.setDynamicProperty("hotbar_b", false);
         sendMsg("@a[tag=paradoxOpped]", `§7${player.name}§f has disabled §6Hotbar`);
     }
     if (HotbarToggle === false && HotbarRestDefaultMessageToggle === true) {
@@ -48,8 +47,7 @@ export function uiHOTBAR(hotbarResult: ModalFormResponse, player: Player) {
         return paradoxui(player);
     }
     if (HotbarToggle === true && HotbarRestDefaultMessageToggle === true) {
-        configuration.modules.hotbar.message = configMessageBackup.get(dummy);
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        config.modules.hotbar.message = configMessageBackup.get(dummy);
         Hotbar();
     }
 

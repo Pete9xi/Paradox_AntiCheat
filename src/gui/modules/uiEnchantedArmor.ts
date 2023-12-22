@@ -32,7 +32,9 @@ async function handleUIEnchantedArmor(enchantedarmorResult: ModalFormResponse, p
     }
     const [EnchantedArmorToggle] = enchantedarmorResult.formValues;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
+
+    // Get Dynamic Property Boolean
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {

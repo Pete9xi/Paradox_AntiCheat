@@ -1,7 +1,7 @@
-import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent, EntityEquippableComponent, EquipmentSlot, Enchantment, ItemEnchantsComponent } from "@minecraft/server";
+import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent } from "@minecraft/server";
+import config from "../../../data/config.js";
 import { flag, isTimerExpired } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 // Create a Map to store each player's last known position, timestamp, and highest speed
 const playerData = new Map<string, { lastPosition: number[]; lastTimestamp: number; highestBps: number; lastHitTimestamp: number }>();
@@ -68,8 +68,7 @@ function calculateMovementBPS(currentPosition: number[], lastPosition: number[],
 
 function speeda(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const speedABoolean = configuration.modules.speedA.enabled;
+    const speedABoolean = dynamicPropertyRegistry.get("speeda_b");
 
     // Unsubscribe if disabled in-game
     if (speedABoolean === false) {
@@ -88,7 +87,7 @@ function speeda(id: number) {
     const filteredPlayers = world.getPlayers(filter);
     for (const player of filteredPlayers) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Skip if they have permission
         if (uniqueId === player.name) {
@@ -103,26 +102,6 @@ function speeda(id: number) {
         const rideCheck = player.hasTag("riding");
         if (rideCheck) {
             continue;
-        }
-        //trident check
-        const equipment = player.getComponent("equippable") as EntityEquippableComponent;
-        const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
-        if (mainhand && mainhand.typeId === "minecraft:trident") {
-            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
-            const enchantmentList = enchantmentsComponent.enchantments;
-            const iterator = enchantmentList[Symbol.iterator]();
-            let iteratorResult = iterator.next();
-            let targetEnchant = false;
-            while (!iteratorResult.done) {
-                const enchantment: Enchantment = iteratorResult.value;
-                if (enchantment.type.id === "riptide") {
-                    targetEnchant = true;
-                }
-                iteratorResult = iterator.next();
-            }
-            if (targetEnchant === true) {
-                continue;
-            }
         }
 
         const playerName = player.id;
@@ -158,7 +137,7 @@ function speeda(id: number) {
 
         const verifyTpGrace = isTimerExpired(player.id);
         // We compare with a 20% buffer to minimize false flags
-        if (!isNaN(playerInfo.highestBps) && playerInfo.highestBps > configuration.modules.speedA.speed && verifyTpGrace === true) {
+        if (!isNaN(playerInfo.highestBps) && playerInfo.highestBps > config.modules.speedA.speed && verifyTpGrace === true) {
             flag(player, "Speed", "A", "Movement", null, null, "IllegalSpeed", playerInfo.highestBps.toFixed(2), true);
             playerInfo.highestBps = 0;
         }

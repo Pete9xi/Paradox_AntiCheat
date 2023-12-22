@@ -1,11 +1,10 @@
 import { world, EntityQueryOptions, system } from "@minecraft/server";
+import config from "../../../data/config.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 async function hotbar(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const hotbarBoolean = configuration.modules.hotbar.enabled;
+    const hotbarBoolean = dynamicPropertyRegistry.get("hotbar_b");
 
     // Unsubscribe if disabled in-game
     if (hotbarBoolean === false) {
@@ -19,7 +18,7 @@ async function hotbar(id: number) {
     const filteredPlayers = world.getPlayers(filter);
     // run as each player
     for (const player of filteredPlayers) {
-        hotbarMessage = configuration.modules.hotbar.message;
+        hotbarMessage = config.modules.hotbar.message;
         player.onScreenDisplay.setActionBar(hotbarMessage);
     }
 }

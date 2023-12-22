@@ -1,8 +1,8 @@
 import { world, system, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent } from "@minecraft/server";
 import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index";
 import { flag, isTimerExpired } from "../../../util.js";
+import config from "../../../data/config.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config";
 
 // Create a Map to store each player's last known position, timestamp, and highest speed
 const playerData = new Map<string, { lastPosition: number[]; lastTimestamp: number; highestBps: number; lastHitTimestamp: number }>();
@@ -69,8 +69,7 @@ function calculateMovementBPS(currentPosition: number[], lastPosition: number[],
 
 function invalidsprinta(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const invalidSprintABoolean = configuration.modules.invalidsprintA.enabled;
+    const invalidSprintABoolean = dynamicPropertyRegistry.get("invalidsprinta_b");
 
     // Unsubscribe if disabled in-game
     if (invalidSprintABoolean === false) {
@@ -85,7 +84,7 @@ function invalidsprinta(id: number) {
     const players = world.getPlayers();
     for (const player of players) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Skip if they have permission
         if (uniqueId === player.name) {
@@ -135,7 +134,7 @@ function invalidsprinta(id: number) {
 
         const verifyTpGrace = isTimerExpired(player.id);
         // We compare with a 20% buffer to minimize false flags
-        if (!isNaN(playerInfo.highestBps) && playerInfo.highestBps > configuration.modules.speedA.speed && player.getEffect(MinecraftEffectTypes.Blindness) && verifyTpGrace === true) {
+        if (!isNaN(playerInfo.highestBps) && playerInfo.highestBps > config.modules.speedA.speed && player.getEffect(MinecraftEffectTypes.Blindness) && verifyTpGrace === true) {
             flag(player, "InvalidSprint", "A", "Movement", null, null, "BlindSprint", playerInfo.highestBps.toFixed(2), true);
             playerInfo.highestBps = 0;
         }

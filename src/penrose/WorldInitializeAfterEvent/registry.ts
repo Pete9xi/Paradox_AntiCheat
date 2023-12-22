@@ -1,166 +1,163 @@
-import { DynamicPropertyManager } from "../../classes/DynamicPropertyManager.js";
+import { world, Vector3, Vector } from "@minecraft/server";
 import config from "../../data/config.js";
 import { extendPlayerPrototype } from "../../classes/PlayerExtended/Player.js";
 import { WorldExtended, extendWorldPrototype } from "../../classes/WorldExtended/World.js";
-import { world } from "@minecraft/server";
 
-// Get the singleton instance of DynamicPropertyManager
-const dynamicPropertyRegistry = DynamicPropertyManager.getInstance();
+export const dynamicPropertyRegistry = new Map<string, string | number | boolean | Vector3>();
 
-// Define types for deep equality checks
-type Primitive = string | number | boolean | null | undefined;
-type DeepEqual<T> = T extends Primitive ? true : T extends Array<infer U> ? DeepEqualArray<U> : T extends Record<string, infer U> ? DeepEqualObject<U> : never;
-type DeepEqualArray<T> = T extends Array<infer U> ? Array<DeepEqual<U>> : never;
-type DeepEqualObject<T> = { [K in keyof T]: DeepEqual<T[K]> };
+function registry() {
+    // Extend Prototypes here
+    extendPlayerPrototype();
+    extendWorldPrototype();
 
-/**
- * Deeply compare two objects for equality.
- * @param obj1 The first object.
- * @param obj2 The second object.
- * @returns True if the objects are deeply equal, false otherwise.
- */
-function deepEqual<T>(obj1: T, obj2: T): boolean {
-    if (obj1 === obj2) {
-        return true;
-    }
+    /**
+     * Define property first
+     * Register property second
+     * Set property third
+     */
 
-    if (typeof obj1 !== "object" || obj1 === null || typeof obj2 !== "object" || obj2 === null) {
-        return false;
-    }
+    // Boolean properties
+    const defineBooleanProperties = [
+        "ops_b",
+        "flya_b",
+        "xraya_b",
+        "antikb_b",
+        "hotbar_b",
+        "jesusa_b",
+        "reacha_b",
+        "reachb_b",
+        "speeda_b",
+        "salvage_b",
+        "antispam_b",
+        "clearlag_b",
+        "lockdown_b",
+        "spammera_b",
+        "spammerb_b",
+        "spammerc_b",
+        "stackban_b",
+        "antifalla_b",
+        "chatranks_b",
+        "antinukera_b",
+        "creativegm_b",
+        "namespoofa_b",
+        "namespoofb_b",
+        "survivalgm_b",
+        "adventuregm_b",
+        "antishulker_b",
+        "badpackets1_b",
+        "badpackets2_b",
+        "worldborder_b",
+        "illegallores_b",
+        "antiscaffolda_b",
+        "illegalitemsa_b",
+        "illegalitemsb_b",
+        "illegalitemsc_b",
+        "invalidsprinta_b",
+        "bedrockvalidate_b",
+        "illegalenchantment_b",
+        "showrules_b",
+        "kickondecline_b",
+        "autoban_b",
+        "autoclicker_b",
+        "antikillaura_b",
+        "afk_b",
+        "antiphasea_b",
+        "spawnProtection_b",
+    ];
 
-    const keys1 = Object.keys(obj1) as Array<keyof T>;
-    const keys2 = Object.keys(obj2) as Array<keyof T>;
-
-    if (keys1.length !== keys2.length) {
-        return false;
-    }
-
-    for (const key of keys1) {
-        if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-// Define a structure for representing the differences between two objects
-interface Difference {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: Difference | any;
-}
-
-/**
- * Find the differences between two objects.
- * @param obj1 The first object.
- * @param obj2 The second object.
- * @param path An array representing the current path in the object hierarchy.
- * @returns An object representing the differences.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function diffObjects(obj1: Record<string, any>, obj2: Record<string, any>, path: string[] = []): Difference {
-    const diff: Difference = {};
-    for (const key in obj1) {
-        const currentPath = [...path, key];
-
-        if (typeof obj1[key] === "object" && obj1[key] !== null && obj2[key] !== null && typeof obj2[key] === "object") {
-            const nestedDiff = diffObjects(obj1[key], obj2[key], currentPath);
-            if (nestedDiff && Object.keys(nestedDiff).length > 0) {
-                diff[key] = nestedDiff;
+    let flag = false;
+    // Loop through the identifiers in the array
+    defineBooleanProperties.forEach((booleanProp) => {
+        // Verify if identifier matches any module property in config
+        const objectEntriesModules = Object.entries(config.modules);
+        for (const [configProperty, configPropertyValue] of objectEntriesModules) {
+            if (booleanProp.replaceAll(/(_b)/g, "") === configProperty.toLowerCase()) {
+                // Loop through the settings of each property in module
+                const objectEntriesValues = Object.entries(configPropertyValue);
+                for (const [setting, settingValue] of objectEntriesValues) {
+                    if (setting === "enabled") {
+                        // We conditionally test if the dynamic property already exists
+                        const test = world.getDynamicProperty(booleanProp);
+                        if (test === undefined) {
+                            // Dynamic property doesn't exist so we create it with the default settings in config
+                            world.setDynamicProperty(booleanProp, settingValue);
+                            // Set property with value as an element that we can use in other scripts
+                            dynamicPropertyRegistry.set(booleanProp, settingValue);
+                        } else {
+                            // Dynamic property exists so set property with value as an element that we can use in other scripts
+                            dynamicPropertyRegistry.set(booleanProp, test);
+                        }
+                    }
+                    // If a matching boolean property is found, set the flag and break out of the loop
+                    flag = true;
+                    break;
+                }
             }
-        } else if (!deepEqual(obj1[key], obj2[key])) {
-            diff[key] = obj1[key];
         }
-    }
-    return diff;
-}
-
-/**
- * Recursively merges differences from `diff` object into `obj`.
- * @param obj The original object to be merged into.
- * @param diff The differences to be merged from.
- * @returns The merged object containing the changes from the `diff` object.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mergeObjects(obj: Record<string, any>, diff: Record<string, any>): Record<string, any> {
-    for (const key in diff) {
-        if (typeof diff[key] === "object" && !Array.isArray(diff[key])) {
-            obj[key] = mergeObjects(obj[key], diff[key]);
-        } else {
-            obj[key] = diff[key];
+        // If no matching boolean property was found, execute the else block
+        if (!flag) {
+            // We conditionally test if the dynamic property already exists
+            const test = world.getDynamicProperty(booleanProp);
+            if (test === undefined) {
+                // Dynamic property doesn't exist so we create it and disable it by default
+                world.setDynamicProperty(booleanProp, false);
+                // Set property with value as an element that we can use in other scripts
+                dynamicPropertyRegistry.set(booleanProp, false);
+            } else {
+                // Dynamic property exists so set property with value as an element that we can use in other scripts
+                dynamicPropertyRegistry.set(booleanProp, test);
+            }
         }
-    }
-    return obj;
-}
-
-/**
- * Manage dynamic property registration and configuration changes.
- * @returns A promise that resolves when the registry is updated.
- */
-function registry(): Promise<void> {
-    return new Promise<void>((resolve) => {
-        // Extend Prototypes here
-        extendPlayerPrototype();
-        extendWorldPrototype();
-
-        /**
-         * This is global security for strings where applicable
-         */
-        const salt = world.getDynamicProperty("crypt");
-        if (salt === undefined) {
-            world.setDynamicProperty("crypt", (world as WorldExtended).generateRandomUUID());
-        }
-
-        // Check if the "config" property already exists
-        const existingConfig = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig");
-        // Check if the "backupConfig" property already exists
-        const backupConfig = dynamicPropertyRegistry.getProperty(undefined, "paradoxBackupConfig");
-
-        if (!existingConfig) {
-            // Create the "paradoxConfig" property with the new value
-            dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", config);
-            // Create the backup with the current config object
-            dynamicPropertyRegistry.setProperty(undefined, "paradoxBackupConfig", config);
-            resolve();
-            return;
-        }
-
-        if (!backupConfig) {
-            // Create the backup with the current "paradoxBackupConfig"
-            dynamicPropertyRegistry.setProperty(undefined, "paradoxBackupConfig", config);
-            resolve();
-            return;
-        }
-
-        // Determine what has changed in the config object compared to the backup
-        const changes = diffObjects(config, backupConfig as object);
-
-        if (Object.keys(changes).length > 0) {
-            // Update the backup with the current config object
-            dynamicPropertyRegistry.setProperty(undefined, "paradoxBackupConfig", config);
-
-            // Merge the changes into the "paradoxConfig" property
-            const mergedConfig = mergeObjects(config, changes);
-
-            dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", mergedConfig);
-        }
-
-        resolve();
+        flag = false; // reset the flag for the next iteration
     });
+
+    // Set additional properties for world border
+    const worldborder_n = world.getDynamicProperty("worldborder_n");
+    if (worldborder_n === undefined) {
+        world.setDynamicProperty("worldborder_n", config.modules.worldBorder.overworld);
+        dynamicPropertyRegistry.set("worldborder_n", config.modules.worldBorder.overworld);
+    } else {
+        dynamicPropertyRegistry.set("worldborder_n", worldborder_n);
+    }
+    const worldborderNether_n = world.getDynamicProperty("worldborder_nether_n");
+    if (worldborderNether_n === undefined) {
+        world.setDynamicProperty("worldborder_nether_n", config.modules.worldBorder.nether);
+        dynamicPropertyRegistry.set("worldborder_nether_n", config.modules.worldBorder.nether);
+    } else {
+        dynamicPropertyRegistry.set("worldborder_nether_n", worldborderNether_n);
+    }
+    const worldborderEnd_n = world.getDynamicProperty("worldborder_end_n");
+    if (worldborderEnd_n === undefined) {
+        world.setDynamicProperty("worldborder_end_n", config.modules.worldBorder.end);
+        dynamicPropertyRegistry.set("worldborder_end_n", config.modules.worldBorder.end);
+    } else {
+        dynamicPropertyRegistry.set("worldborder_end_n", worldborderEnd_n);
+    }
+    const spawnProtection_V3 = world.getDynamicProperty("spawnProtection_V3");
+    if (spawnProtection_V3 === undefined) {
+        world.setDynamicProperty("spawnProtection_V3", new Vector(0, 0, 0));
+        dynamicPropertyRegistry.set("spawnProtection_V3", new Vector(0, 0, 0));
+    } else {
+        dynamicPropertyRegistry.set("spawnProtection_V3", spawnProtection_V3);
+    }
+    const spawnProtection_Radius = world.getDynamicProperty("spawnProtection_Radius");
+    if (spawnProtection_Radius === undefined) {
+        world.setDynamicProperty("spawnProtection_Radius", 0);
+        dynamicPropertyRegistry.set("spawnProtection_Radius", 0);
+    } else {
+        dynamicPropertyRegistry.set("spawnProtection_Radius", spawnProtection_Radius);
+    }
+    /**
+     * This is global security for strings where applicable
+     */
+    const salt = world.getDynamicProperty("crypt");
+    if (salt === undefined) {
+        world.setDynamicProperty("crypt", (world as WorldExtended).generateRandomUUID());
+    }
 }
 
-/**
- * Initialize registry after the world has initialized.
- * @returns A promise that resolves when the registry is initialized.
- */
-const Registry = (): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        world.afterEvents.worldInitialize.subscribe(async () => {
-            await registry()
-                .then(() => resolve())
-                .catch((error) => reject(error));
-        });
-    });
+const Registry = () => {
+    world.afterEvents.worldInitialize.subscribe(registry);
 };
 
-export { Registry, dynamicPropertyRegistry };
+export { Registry };

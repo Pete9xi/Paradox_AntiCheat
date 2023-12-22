@@ -4,7 +4,6 @@ import { getPrefix, setTimer } from "../../../util.js";
 import { kickablePlayers } from "../../../kickcheck.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { ScoreManager } from "../../../classes/ScoreManager.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 async function onJoinTime(object: PlayerSpawnAfterEvent) {
     /**
@@ -24,13 +23,12 @@ async function onJoinTime(object: PlayerSpawnAfterEvent) {
     }
 
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const lockdownBoolean = configuration.modules.lockdown.enabled;
+    const lockdownBoolean = dynamicPropertyRegistry.get("lockdown_b");
 
     // Lock down the server if enabled
     if (lockdownBoolean) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         if (uniqueId === player.name) {
             return;

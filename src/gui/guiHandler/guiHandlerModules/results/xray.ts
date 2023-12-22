@@ -2,13 +2,11 @@ import { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../../../penrose/WorldInitializeAfterEvent/registry";
 import { uiXRAY } from "../../../modules/uiXray";
-import ConfigInterface from "../../../../interfaces/Config";
 
 export function xrayHandler(player: Player) {
     const modulesxtrayui = new ModalFormData();
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
     modulesxtrayui.title("§4Paradox Modules - Xray§4");
-    const xrayBoolean = configuration.modules.xrayA.enabled;
+    const xrayBoolean = dynamicPropertyRegistry.get("xraya_b") as boolean;
     modulesxtrayui.toggle("Xray - Notify's staff when and where player's mine specific ores:", xrayBoolean);
     modulesxtrayui
         .show(player)

@@ -1,10 +1,9 @@
-import { Player } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry";
 import { sendMsg, sendMsgToPlayer } from "../../util";
 import { paradoxui } from "../paradoxui.js";
 import { KillAura } from "../../penrose/EntityHitEntityAfterEvent/killaura";
-import ConfigInterface from "../../interfaces/Config";
 
 /**
  * Handles the result of a modal form used for toggling anti-kill aura mode.
@@ -34,24 +33,23 @@ async function handleUIAntiKillAura(antikillauraResult: ModalFormResponse, playe
     }
     const [AntiKillAuraToggle] = antikillauraResult.formValues;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
+
+    // Get Dynamic Property Boolean
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to configure Anti Killaura`);
     }
-
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     if (AntiKillAuraToggle === false) {
         // Deny
-        configuration.modules.antiKillAura.enabled = false;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("antikillaura_b", false);
+        world.setDynamicProperty("antikillaura_b", false);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has disabled §4AntiKillAura§f!`);
     } else if (AntiKillAuraToggle === true) {
         // Allow
-        configuration.modules.antiKillAura.enabled = true;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("antikillaura_b", true);
+        world.setDynamicProperty("antikillaura_b", true);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has enabled §6AntiKillAura§f!`);
         KillAura();
     }

@@ -2,13 +2,8 @@ import { world, PlayerBreakBlockAfterEvent, system, EntityQueryOptions, PlayerLe
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 const lastBreakTime = new Map<string, number>();
-
-function getRegistry() {
-    return dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-}
 
 function onPlayerLogout(event: PlayerLeaveAfterEvent): void {
     // Remove the player's data from the map when they log off
@@ -23,8 +18,7 @@ async function afternukera(
     afterPlayerBreakBlockCallback: (object: PlayerBreakBlockAfterEvent) => void,
     afterPlayerLeaveCallback: (object: PlayerLeaveAfterEvent) => void
 ): Promise<void> {
-    const configuration = getRegistry();
-    const antiNukerABoolean = configuration.modules.antinukerA.enabled;
+    const antiNukerABoolean = dynamicPropertyRegistry.get("antinukera_b");
     if (antiNukerABoolean === false) {
         breakData.clear();
         lastBreakTime.clear();
@@ -37,7 +31,7 @@ async function afternukera(
 
     const { block, player, dimension, brokenBlockPermutation } = object;
     const { x, y, z } = block.location;
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
     if (uniqueId === player.name) {
         return;
     }
@@ -186,7 +180,6 @@ async function afternukera(
         MinecraftBlockTypes.SnowLayer,
         MinecraftBlockTypes.PowderSnow,
         MinecraftBlockTypes.RedstoneWire,
-        MinecraftBlockTypes.Scaffolding,
     ];
 
     const efficiencyLevels: Record<number, number> = {
@@ -212,7 +205,7 @@ async function afternukera(
     const requiredTimeDifference = efficiencyLevels[itemEfficiencyLevel];
 
     if (!vegetation.includes(brokenBlockPermutation.type.id as MinecraftBlockTypes) && lastBreakInSeconds && lastBreakInSeconds < requiredTimeDifference) {
-        if (counter >= 5) {
+        if (counter >= 3) {
             const blockLoc = dimension.getBlock({ x: x, y: y, z: z });
             const blockID = brokenBlockPermutation.clone();
 
@@ -254,8 +247,7 @@ async function afternukera(
 }
 
 function freeze(id: number) {
-    const configuration = getRegistry();
-    const antiNukerABoolean = configuration.modules.antinukerA.enabled;
+    const antiNukerABoolean = dynamicPropertyRegistry.get("antinukera_b");
     if (antiNukerABoolean === false) {
         system.clearRun(id);
         return;
@@ -275,12 +267,7 @@ function freeze(id: number) {
             player.removeTag("freezeNukerA");
             return;
         }
-        player.onScreenDisplay.setTitle("§f§4[§6Paradox§4]§f Frozen!", {
-            subtitle: "§fContact Staff §4[§6AntiNukerA§4]§f",
-            fadeInDuration: 0,
-            fadeOutDuration: 0,
-            stayDuration: 60,
-        });
+        player.onScreenDisplay.setTitle("§f§4[§6Paradox§4]§f Frozen!", { subtitle: "§fContact Staff §4[§6AntiNukerA§4]§f", fadeInDuration: 0, fadeOutDuration: 0, stayDuration: 60 });
     }
 }
 

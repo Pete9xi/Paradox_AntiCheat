@@ -2,12 +2,10 @@ import { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../../../penrose/WorldInitializeAfterEvent/registry";
 import { uiANTIKILLAURA } from "../../../modules/uiAntiKillaura";
-import ConfigInterface from "../../../../interfaces/Config";
 
 export function antiKillAuraHandler(player: Player) {
     const modulesantikillaura = new ModalFormData();
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const antiKillAuraBoolean = configuration.modules.antiKillAura.enabled;
+    const antiKillAuraBoolean = dynamicPropertyRegistry.get("antikillaura_b") as boolean;
     modulesantikillaura.title("§4Paradox Modules - Anti KillAura§4");
     modulesantikillaura.toggle("Anti KillAura - Toggles checks for attacks outside a 90 degree angle:", antiKillAuraBoolean);
     modulesantikillaura

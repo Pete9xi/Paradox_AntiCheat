@@ -1,11 +1,11 @@
 import { world, Player, ChatSendAfterEvent } from "@minecraft/server";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer, setTimer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function tpaHelp(player: Player, prefix: string, setting: boolean) {
+function tpaHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.tpa) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -40,27 +40,25 @@ export function tpa(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.tpa) {
-        return tpaHelp(player, prefix, configuration.customcommands.tpa);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.tpa) {
+        return tpaHelp(player, prefix);
     }
 
     // Are there arguements
     if (!args.length) {
-        return tpaHelp(player, prefix, configuration.customcommands.tpa);
+        return tpaHelp(player, prefix);
     }
 
     let artificalPlayer: Player;
@@ -88,18 +86,12 @@ export function tpa(message: ChatSendAfterEvent, args: string[]) {
     if (args[0] && args[1]) {
         // Let's teleport you to that player
         setTimer(artificalPlayer.id);
-        artificalPlayer.teleport(member.location, {
-            dimension: member.dimension,
-            rotation: { x: 0, y: 0 },
-            facingLocation: { x: 0, y: 0, z: 0 },
-            checkForBlocks: true,
-            keepVelocity: false,
-        });
+        artificalPlayer.teleport(member.location, { dimension: member.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
         // Let you know that you have been teleported
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Teleported §7${artificalPlayer.name}§f to §7${member.name}§f`);
     } else {
         // Need to specify who
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You forgot to mention 'from' and 'who' to teleport.`);
-        return tpaHelp(player, prefix, configuration.customcommands.tpa);
+        return tpaHelp(player, prefix);
     }
 }

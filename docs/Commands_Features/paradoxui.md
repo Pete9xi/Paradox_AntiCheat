@@ -1,4 +1,4 @@
-![ParadoxUI](../Media/Paradox_Title.png)
+![ParadoxUI](https://i.imgur.com/oi5NwOp.png)
 
 ## Overview
 
@@ -6,7 +6,7 @@ ParadoxUI allows you to manage Paradox through a menu system, with some features
 
 To get started, simply type `!paradoxui` in chat and then close the window. You will be presented with the main menu, where all options are explained.
 
-![ParadoxUI](../Media/gui.png)
+![ParadoxUI](https://i.imgur.com/vu9soSz.png)
 
 ## InventoryUI
 
@@ -24,4 +24,4 @@ You can also view the stats for an item, which includes enchantments, lores, nam
 
 > In this video, we will cover applying enchantments to an item, replacing the item, and removing the item from the player's inventory. When renaming and editing lores, you can use color modifiers.
 
-[Watch Video](../Media/ItemEditor.mp4 ":include :type=video controls width=100%")
+[Watch Video](Media/ItemEditor.mp4 ":include :type=video controls width=100%")

@@ -1,11 +1,10 @@
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config.js";
-import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
+import config from "../../data/config.js";
 
-function pvpHelp(player: Player, prefix: string, setting: boolean) {
+function pvpHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.pvp) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -42,17 +41,15 @@ export function pvp(message: ChatSendAfterEvent, args: string[]) {
     // Check for custom prefix
     const prefix = getPrefix(player);
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Are there arguements
     if (!args.length) {
-        return pvpHelp(player, prefix, configuration.customcommands.pvp);
+        return pvpHelp(player, prefix);
     }
 
     // Was help requested
     const argCheck = args[0];
-    if (argCheck && (args[0].toLowerCase() === "help" || !configuration.customcommands.pvp)) {
-        return pvpHelp(player, prefix, configuration.customcommands.pvp);
+    if (argCheck && (args[0].toLowerCase() === "help" || !config.customcommands.pvp)) {
+        return pvpHelp(player, prefix);
     }
     if (argCheck && args[0].toLowerCase() === "enable") {
         player.removeTag("pvpDisabled");

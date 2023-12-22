@@ -1,13 +1,13 @@
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
+import config from "../../data/config.js";
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
 import { paradoxui } from "../../gui/paradoxui.js";
 import { ShowRules } from "../../gui/showrules/showrules.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function paradoxuiHelp(player: Player, prefix: string, setting: boolean) {
+function paradoxuiHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.paradoxiu) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -39,11 +39,11 @@ export function paradoxUI(message: ChatSendAfterEvent, args: string[]) {
 
     const player = message.sender;
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
+    const showrulesBoolean = dynamicPropertyRegistry.get("showrules_b");
 
     //check to see if the player has the rules tag incase they have been able to call the UI command before the
     // rules have been displayed.
-    if (player.hasTag("ShowRulesOnJoin") && configuration.modules.showrules.enabled === true) {
+    if (player.hasTag("ShowRulesOnJoin") && showrulesBoolean === true) {
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You have not agreed to the rules. Please try once these have been displayed.`);
         return ShowRules();
     }
@@ -53,8 +53,8 @@ export function paradoxUI(message: ChatSendAfterEvent, args: string[]) {
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.paradoxiu) {
-        return paradoxuiHelp(player, prefix, configuration.customcommands.paradoxiu);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.paradoxiu) {
+        return paradoxuiHelp(player, prefix);
     }
 
     sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Close chat window for ParadoxUI.`);

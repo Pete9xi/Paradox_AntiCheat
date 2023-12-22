@@ -1,9 +1,8 @@
-import * as fs from "fs";
-import * as https from "https";
-import * as readline from "readline";
-import * as path from "path";
-import * as AdmZip from "adm-zip";
-import * as os from "os";
+const fs = require("fs");
+const https = require("https");
+const readline = require("readline");
+const path = require("path");
+const AdmZip = require("adm-zip");
 
 // Function to retrieve the latest BDS version
 function getLatestVersion() {
@@ -33,7 +32,7 @@ function getLatestVersion() {
 
 // Function to download the BDS server
 function downloadBDS(version) {
-    const osType = os.platform();
+    const osType = require("os").platform();
     let downloadURL;
 
     if (osType === "linux") {

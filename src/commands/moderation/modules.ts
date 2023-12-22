@@ -1,12 +1,12 @@
 import { ChatSendAfterEvent, Player, Vector3 } from "@minecraft/server";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
 import { ScoreManager } from "../../classes/ScoreManager.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function modulesHelp(player: Player, prefix: string, setting: boolean) {
+function modulesHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.modules) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -39,22 +39,20 @@ export function modules(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.modules) {
-        return modulesHelp(player, prefix, configuration.customcommands.modules);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.modules) {
+        return modulesHelp(player, prefix);
     }
 
     // scores
@@ -64,58 +62,58 @@ export function modules(message: ChatSendAfterEvent, args: string[]) {
     const antikb = ScoreManager.getScore("antikb", player);
 
     // Booleans
-    const worldBorderBoolean = configuration.modules.worldBorder.enabled;
-    const xrayaBoolean = configuration.modules.xrayA.enabled;
-    const opsBoolean = configuration.modules.ops.enabled;
-    const speedABoolean = configuration.modules.speedA.enabled;
-    const nameSpoofABoolean = configuration.modules.namespoofA.enabled;
-    const nameSpoofBBoolean = configuration.modules.namespoofB.enabled;
-    const jesusABoolean = configuration.modules.jesusA.enabled;
-    const InvalidSprintABoolean = configuration.modules.invalidsprintA.enabled;
-    const illegalItemsABoolean = configuration.modules.illegalitemsA.enabled;
-    const illegalItemsCBoolean = configuration.modules.illegalitemsC.enabled;
-    const hotbarBoolean = configuration.modules.hotbar.enabled;
-    const adventureGMBoolean = configuration.modules.adventureGM.enabled;
-    const creativeGMBoolean = configuration.modules.creativeGM.enabled;
-    const survivalGMBoolean = configuration.modules.survivalGM.enabled;
-    const flyABoolean = configuration.modules.flyA.enabled;
-    const bedrockValidateBoolean = configuration.modules.bedrockValidate.enabled;
-    const reachBBoolean = configuration.modules.reachB.enabled;
-    const antiScaffoldABoolean = configuration.modules.antiscaffoldA.enabled;
-    const reachABoolean = configuration.modules.reachA.enabled;
-    const illegalItemsBBoolean = configuration.modules.illegalitemsB.enabled;
-    const antiNukerABoolean = configuration.modules.antinukerA.enabled;
-    const spammerCBoolean = configuration.modules.spammerC.enabled;
-    const spammerBBoolean = configuration.modules.spammerB.enabled;
-    const spammerABoolean = configuration.modules.spammerA.enabled;
-    const badPackets1Boolean = configuration.modules.badpackets1.enabled;
-    const savageBoolean = configuration.modules.salvage.enabled;
-    const illegalLoresBoolean = configuration.modules.illegalLores.enabled;
-    const illegalEnchantmentBoolean = configuration.modules.illegalEnchantment.enabled;
-    const lockdownBoolean = configuration.modules.lockdown.enabled;
-    const antiShulkerBoolean = configuration.modules.antishulker.enabled;
-    const chatRanksBoolean = configuration.modules.chatranks.enabled;
-    const stackBanBoolean = configuration.modules.stackBan.enabled;
-    const badPackets2Boolean = configuration.modules.badpackets2.enabled;
-    const antiSpamBoolean = configuration.modules.antispam.enabled;
-    const clearLagBoolean = configuration.modules.clearLag.enabled;
-    const antiFallABoolean = configuration.modules.antifallA.enabled;
-    const showrulesBoolean = configuration.modules.showrules.enabled;
-    const autobanBoolean = configuration.modules.autoBan.enabled;
-    const autoclickerBoolean = configuration.modules.autoclicker.enabled;
-    const antiKillAuraBoolean = configuration.modules.antiKillAura.enabled;
-    const afkBoolean = configuration.modules.afk.enabled;
-    const antiPhaseABoolean = configuration.modules.antiphaseA.enabled;
-    const spawnProtectionBoolean = configuration.modules.spawnprotection.enabled;
+    const worldBorderBoolean = dynamicPropertyRegistry.get("worldborder_b");
+    const xrayaBoolean = dynamicPropertyRegistry.get("xraya_b");
+    const opsBoolean = dynamicPropertyRegistry.get("ops_b");
+    const speedABoolean = dynamicPropertyRegistry.get("speeda_b");
+    const nameSpoofABoolean = dynamicPropertyRegistry.get("namespoofa_b");
+    const nameSpoofBBoolean = dynamicPropertyRegistry.get("namespoofb_b");
+    const jesusABoolean = dynamicPropertyRegistry.get("jesusa_b");
+    const InvalidSprintABoolean = dynamicPropertyRegistry.get("invalidsprinta_b");
+    const illegalItemsABoolean = dynamicPropertyRegistry.get("illegalitemsa_b");
+    const illegalItemsCBoolean = dynamicPropertyRegistry.get("illegalitemsc_b");
+    const hotbarBoolean = dynamicPropertyRegistry.get("hotbar_b");
+    const adventureGMBoolean = dynamicPropertyRegistry.get("adventuregm_b");
+    const creativeGMBoolean = dynamicPropertyRegistry.get("creativegm_b");
+    const survivalGMBoolean = dynamicPropertyRegistry.get("survivalgm_b");
+    const flyABoolean = dynamicPropertyRegistry.get("flya_b");
+    const bedrockValidateBoolean = dynamicPropertyRegistry.get("bedrockvalidate_b");
+    const reachBBoolean = dynamicPropertyRegistry.get("reachb_b");
+    const antiScaffoldABoolean = dynamicPropertyRegistry.get("antiscaffolda_b");
+    const reachABoolean = dynamicPropertyRegistry.get("reacha_b");
+    const illegalItemsBBoolean = dynamicPropertyRegistry.get("illegalitemsb_b");
+    const antiNukerABoolean = dynamicPropertyRegistry.get("antinukera_b");
+    const spammerCBoolean = dynamicPropertyRegistry.get("spammerc_b");
+    const spammerBBoolean = dynamicPropertyRegistry.get("spammerb_b");
+    const spammerABoolean = dynamicPropertyRegistry.get("spammera_b");
+    const badPackets1Boolean = dynamicPropertyRegistry.get("badpackets1_b");
+    const savageBoolean = dynamicPropertyRegistry.get("salvage_b");
+    const illegalLoresBoolean = dynamicPropertyRegistry.get("illegallores_b");
+    const illegalEnchantmentBoolean = dynamicPropertyRegistry.get("illegalenchantment_b");
+    const lockdownBoolean = dynamicPropertyRegistry.get("lockdown_b");
+    const antiShulkerBoolean = dynamicPropertyRegistry.get("antishulker_b");
+    const chatRanksBoolean = dynamicPropertyRegistry.get("chatranks_b");
+    const stackBanBoolean = dynamicPropertyRegistry.get("stackban_b");
+    const badPackets2Boolean = dynamicPropertyRegistry.get("badpackets2_b");
+    const antiSpamBoolean = dynamicPropertyRegistry.get("antispam_b");
+    const clearLagBoolean = dynamicPropertyRegistry.get("clearlag_b");
+    const antiFallABoolean = dynamicPropertyRegistry.get("antifalla_b");
+    const showrulesBoolean = dynamicPropertyRegistry.get("showrules_b");
+    const autobanBoolean = dynamicPropertyRegistry.get("autoban_b");
+    const autoclickerBoolean = dynamicPropertyRegistry.get("autoclicker_b");
+    const antiKillAuraBoolean = dynamicPropertyRegistry.get("antikillaura_b");
+    const afkBoolean = dynamicPropertyRegistry.get("afk_b");
+    const antiPhaseABoolean = dynamicPropertyRegistry.get("antiphasea_b");
+    const spawnProtectionBoolean = dynamicPropertyRegistry.get("spawnProtection_b") as boolean;
 
     // Numbers
-    const worldBorderOverworldNumber = configuration.modules.worldBorder.overworld;
-    const worldBorderNetherNumber = configuration.modules.worldBorder.nether;
-    const worldBorderEndNumber = configuration.modules.worldBorder.end;
-    const spawnProtectionRadius = configuration.modules.spawnprotection.radius;
+    const worldBorderOverworldNumber = dynamicPropertyRegistry.get("worldborder_n");
+    const worldBorderNetherNumber = dynamicPropertyRegistry.get("worldborder_nether_n");
+    const worldBorderEndNumber = dynamicPropertyRegistry.get("worldborder_end_n");
+    const spawnProtectionRadius = dynamicPropertyRegistry.get("spawnProtection_Radius") as number;
 
     //Vectors
-    const spawnProtectionVector3 = configuration.modules.spawnprotection.vector3;
+    const spawnProtectionVector3 = dynamicPropertyRegistry.get("spawnProtection_V3") as Vector3;
 
     const status = (b: string | number | boolean | Vector3) => (b ? "§aENABLED" : "§4DISABLED");
 

@@ -1,12 +1,10 @@
 import { world, system } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function badpackets2(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const badPackets2Boolean = configuration.modules.badpackets2.enabled;
+    const badPackets2Boolean = dynamicPropertyRegistry.get("badpackets2_b");
 
     // Unsubscribe if disabled in-game
     if (badPackets2Boolean === false) {

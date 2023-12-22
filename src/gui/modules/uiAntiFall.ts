@@ -1,10 +1,9 @@
-import { Player } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { paradoxui } from "../paradoxui.js";
 import { sendMsgToPlayer, sendMsg } from "../../util.js";
 import { AntiFallA } from "../../penrose/TickEvent/antifalla/antifall_a.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
 /**
  * Handles the result of a modal form used for toggling anti-fall mode.
@@ -34,26 +33,25 @@ async function handleUIAntiFall(antifallResult: ModalFormResponse, player: Playe
     }
     const [AntiFallToggle] = antifallResult.formValues;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
+
+    // Get Dynamic Property Boolean
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to configure Anti Fall`);
     }
-
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     if (AntiFallToggle === true) {
         // Allow
-        configuration.modules.antifallA.enabled = true;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("antifalla_b", true);
+        world.setDynamicProperty("antifalla_b", true);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has enabled §6AntiFallA§f!`);
         AntiFallA();
     }
     if (AntiFallToggle === false) {
         // Deny
-        configuration.modules.antifallA.enabled = false;
-        dynamicPropertyRegistry.setProperty(undefined, "paradoxConfig", configuration);
+        dynamicPropertyRegistry.set("antifalla_b", false);
+        world.setDynamicProperty("antifalla_b", false);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has disabled §4AntiFallA§f!`);
     }
 

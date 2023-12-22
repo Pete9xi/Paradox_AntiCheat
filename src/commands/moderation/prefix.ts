@@ -1,14 +1,14 @@
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
+import config from "../../data/config.js";
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function resetPrefix(player: Player, configuration: ConfigInterface) {
+function resetPrefix(player: Player) {
     const sanitize = player.getTags();
     for (const tag of sanitize) {
         if (tag.startsWith("Prefix:")) {
             player.removeTag(tag);
-            configuration.customcommands.prefix = "!";
+            config.customcommands.prefix = "!";
         }
     }
     sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Prefix has been reset!`);
@@ -46,21 +46,19 @@ export function prefix(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.prefix) {
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.prefix) {
         return prefixHelp(player, prefix);
     }
 
@@ -74,7 +72,7 @@ export function prefix(message: ChatSendAfterEvent, args: string[]) {
 
     // reset prefix
     if (argcheck === true) {
-        resetPrefix(player, configuration);
+        resetPrefix(player);
         return;
     }
 
@@ -84,8 +82,8 @@ export function prefix(message: ChatSendAfterEvent, args: string[]) {
 
     // Change Prefix command under conditions
     if (args[0].length <= 2 && args[0].length >= 1) {
-        resetPrefix(player, configuration);
-        configuration.customcommands.prefix = args[0];
+        resetPrefix(player);
+        config.customcommands.prefix = args[0];
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Prefix has been changed to '§7${args[0]}§f'!`);
         return player.addTag("Prefix:" + args[0]);
     } else {

@@ -1,12 +1,10 @@
 import { ChatSendAfterEvent, world } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function spammera(msg: ChatSendAfterEvent) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const spammerABoolean = configuration.modules.spammerA.enabled;
+    const spammerABoolean = dynamicPropertyRegistry.get("spammera_b");
 
     // Unsubscribe if disabled in-game
     if (spammerABoolean === false) {
@@ -16,7 +14,7 @@ function spammera(msg: ChatSendAfterEvent) {
     const player = msg.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Skip if they have permission
     if (uniqueId === player.name) {

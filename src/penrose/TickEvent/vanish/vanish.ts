@@ -12,7 +12,7 @@ async function vanish() {
     // Run as each player
     for (const player of filteredPlayers) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Make sure they have permission
         if (uniqueId === player.name) {

@@ -1,11 +1,11 @@
 import { world, ItemStack, Enchantment, Player, Block, PlayerPlaceBlockAfterEvent, BlockInventoryComponent, ItemEnchantsComponent, EnchantmentList, PlayerLeaveAfterEvent } from "@minecraft/server";
 import { illegalitems } from "../../../data/itemban.js";
+import config from "../../../data/config.js";
 import { flag, sendMsgToPlayer, sendMsg } from "../../../util.js";
 import { kickablePlayers } from "../../../kickcheck.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { illegalItemsBWhitelist } from "../../../data/illegalItemsB_whitelist.js";
 import { WorldExtended } from "../../../classes/WorldExtended/World.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 // Create a map of player objects and their enchantment presence
 const enchantmentPresenceMap = new Map<string, Map<Enchantment, boolean>>();
@@ -50,13 +50,12 @@ function onPlayerLogout(event: PlayerLeaveAfterEvent): void {
 
 async function illegalitemsb(object: PlayerPlaceBlockAfterEvent) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const illegalItemsBBoolean = configuration.modules.illegalitemsB.enabled;
-    const salvageBoolean = configuration.modules.salvage.enabled;
-    const illegalLoresBoolean = configuration.modules.illegalLores.enabled;
-    const illegalEnchantmentBoolean = configuration.modules.illegalEnchantment.enabled;
-    const antiShulkerBoolean = configuration.modules.antishulker.enabled;
-    const stackBanBoolean = configuration.modules.stackBan.enabled;
+    const illegalItemsBBoolean = dynamicPropertyRegistry.get("illegalitemsb_b");
+    const salvageBoolean = dynamicPropertyRegistry.get("salvage_b");
+    const illegalLoresBoolean = dynamicPropertyRegistry.get("illegallores_b");
+    const illegalEnchantmentBoolean = dynamicPropertyRegistry.get("illegalenchantment_b");
+    const antiShulkerBoolean = dynamicPropertyRegistry.get("antishulker_b");
+    const stackBanBoolean = dynamicPropertyRegistry.get("stackban_b");
 
     // Unsubscribe if disabled in-game
     if (illegalItemsBBoolean === false) {
@@ -72,7 +71,7 @@ async function illegalitemsb(object: PlayerPlaceBlockAfterEvent) {
     const { x, y, z } = block.location;
 
     // Get the player's unique ID from the "dynamicPropertyRegistry" object
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // If the player has permission (i.e., their unique ID matches their name), skip to the next player
     if (uniqueId === player.name) {
@@ -187,7 +186,7 @@ async function illegalitemsb(object: PlayerPlaceBlockAfterEvent) {
                 }
 
                 // Illegal Lores
-                if (illegalLoresBoolean && !configuration.modules.illegalLores.exclude.includes(String(blockItemStack.getLore()))) {
+                if (illegalLoresBoolean && !config.modules.illegalLores.exclude.includes(String(blockItemStack.getLore()))) {
                     blockContainer.setItem(i);
                     sendMsg("@a[tag=notify]", `§f§4[§6Paradox§4]§f Removed ${itemStackId.replace("minecraft:", "")} with lore from §7${player.name}§f.`);
                     sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Item with illegal lores are not allowed!`);

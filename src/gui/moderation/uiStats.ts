@@ -28,7 +28,7 @@ export function uiSTATS(statsResult: ModalFormResponse, onlineList: string[], pl
         return;
     }
 
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
     if (uniqueId !== player.name) {
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped.`);
         return;

@@ -1,8 +1,8 @@
 import { Player, world, system } from "@minecraft/server";
 import { flag } from "../../../util.js";
+import config from "../../../data/config.js";
 import { kickablePlayers } from "../../../kickcheck.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 function rip(player: Player) {
     // Tag with reason and by who
@@ -19,8 +19,7 @@ function rip(player: Player) {
 
 function namespoofb(id: number) {
     // Get Dynamic Property
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const nameSpoofBoolean = configuration.modules.namespoofB.enabled;
+    const nameSpoofBoolean = dynamicPropertyRegistry.get("namespoofb_b");
 
     // Unsubscribe if disabled in-game
     if (nameSpoofBoolean === false) {
@@ -31,18 +30,18 @@ function namespoofb(id: number) {
     const players = world.getPlayers();
     for (const player of players) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Skip if they have permission
         if (uniqueId === player.name) {
             continue;
         }
         // Namespoof/B = regex check
-        if (configuration.modules.namespoofB.banregex.test(player.name)) {
-            player.nameTag = player.name.replace(configuration.modules.namespoofB.banregex, "");
+        if (config.modules.namespoofB.banregex.test(player.name)) {
+            player.nameTag = player.name.replace(config.modules.namespoofB.banregex, "");
             rip(player);
-        } else if (configuration.modules.namespoofB.kickregex.test(player.name)) {
-            player.nameTag = player.name.replace(configuration.modules.namespoofB.kickregex, "");
+        } else if (config.modules.namespoofB.kickregex.test(player.name)) {
+            player.nameTag = player.name.replace(config.modules.namespoofB.kickregex, "");
             flag(player, "Namespoof", "B", "Exploit", null, null, null, null, false);
         }
     }

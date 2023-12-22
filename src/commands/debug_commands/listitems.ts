@@ -1,13 +1,12 @@
 import { ChatSendAfterEvent, ItemStack, Player, world } from "@minecraft/server";
 import { MinecraftItemTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import config from "../../data/config.js";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
 import { WorldExtended } from "../../classes/WorldExtended/World";
-import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry";
-import ConfigInterface from "../../interfaces/Config";
 
-function listItems(player: Player, prefix: string, debug: boolean) {
+function listItems(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!debug) {
+    if (!config.debug) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -37,14 +36,12 @@ export function listitems(message: ChatSendAfterEvent, args: string[]) {
 
     const player = message.sender;
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for hash/salt and validate password
     const hash = player.getDynamicProperty("hash");
     const salt = player.getDynamicProperty("salt");
 
     // Use either the operator's ID or the encryption password as the key
-    const key = configuration.encryption.password ? configuration.encryption.password : player.id;
+    const key = config.encryption.password ? config.encryption.password : player.id;
 
     // Generate the hash
     const encode = (world as WorldExtended).hashWithSalt(salt as string, key);
@@ -58,8 +55,8 @@ export function listitems(message: ChatSendAfterEvent, args: string[]) {
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.debug) {
-        return listItems(player, prefix, configuration.debug);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.debug) {
+        return listItems(player, prefix);
     }
 
     for (const item in MinecraftItemTypes) {

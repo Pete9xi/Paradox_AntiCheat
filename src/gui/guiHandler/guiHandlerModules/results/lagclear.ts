@@ -2,13 +2,11 @@ import { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../../../penrose/WorldInitializeAfterEvent/registry";
 import { uiLAGCLEAR } from "../../../modules/uiLagClear";
-import ConfigInterface from "../../../../interfaces/Config";
 
 export function lagClearHandler(player: Player) {
     //Lagclear
     const moduleslaglearui = new ModalFormData();
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const clearLagBoolean = configuration.modules.clearLag.enabled;
+    const clearLagBoolean = dynamicPropertyRegistry.get("clearlag_b") as boolean;
     moduleslaglearui.title("§4Paradox Modules - Clear Lag§4");
     moduleslaglearui.toggle("Clear Lag - Clears items and entities with timer:", clearLagBoolean);
     moduleslaglearui

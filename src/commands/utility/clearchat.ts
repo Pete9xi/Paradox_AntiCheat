@@ -1,11 +1,11 @@
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function clearChatHelp(player: Player, prefix: string, setting: boolean) {
+function clearChatHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.clearchat) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -38,22 +38,20 @@ export function clearchat(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.clearchat) {
-        return clearChatHelp(player, prefix, configuration.customcommands.clearchat);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.clearchat) {
+        return clearChatHelp(player, prefix);
     }
 
     for (let clear = 0; clear < 10; clear++) sendMsg("@a", "\n".repeat(60));

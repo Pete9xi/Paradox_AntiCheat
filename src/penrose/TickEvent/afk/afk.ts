@@ -1,20 +1,14 @@
 import { PlayerJoinAfterEvent, PlayerLeaveAfterEvent, system, world, Vector3, Player } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry";
 import config from "../../../data/config";
-import ConfigInterface from "../../../interfaces/Config";
 
 const inactiveThreshold = config.modules.afk.minutes * 60 * 1000; // minutes in milliseconds
 const playerActivityMap: Map<string, number> = new Map(); // Map to store player activity timestamps
 
-function getRegistry() {
-    return dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-}
-
 // Function to check for AFK players and remove them
 function checkAndRemoveAFKPlayers(id: number) {
     // Get Dynamic Property
-    const configuration = getRegistry();
-    const afkBoolean = configuration.modules.afk.enabled;
+    const afkBoolean = dynamicPropertyRegistry.get("afk_b");
 
     // Unsubscribe if disabled in-game
     if (!afkBoolean) {
@@ -30,7 +24,7 @@ function checkAndRemoveAFKPlayers(id: number) {
 
     for (const player of onlinePlayers) {
         // Get the player's unique ID from the "dynamicPropertyRegistry" object
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // If the player has permission (i.e., their unique ID matches their name), skip to the next player
         if (uniqueId === player.name) {
@@ -62,8 +56,7 @@ function checkAndRemoveAFKPlayers(id: number) {
 // Function to update player activity timestamp more frequently
 function updatePlayerActivityFrequently(id: number) {
     // Get Dynamic Property
-    const configuration = getRegistry();
-    const afkBoolean = configuration.modules.afk.enabled;
+    const afkBoolean = dynamicPropertyRegistry.get("afk_b");
 
     // Unsubscribe if disabled in-game
     if (!afkBoolean) {

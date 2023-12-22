@@ -1,15 +1,15 @@
 import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsgToPlayer } from "../../util";
 import { paradoxui } from "../paradoxui.js";
-import ConfigInterface from "../../interfaces/Config.js";
-function resetPrefix(player: Player, configuration: ConfigInterface) {
+function resetPrefix(player: Player) {
     const sanitize = player.getTags();
     for (const tag of sanitize) {
         if (tag.startsWith("Prefix:")) {
             player.removeTag(tag);
-            configuration.customcommands.prefix = "!";
+            config.customcommands.prefix = "!";
         }
     }
     sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Prefix has been reset!`);
@@ -30,15 +30,12 @@ export function uiPREFIX(prefixResult: ModalFormResponse, onlineList: string[], 
         }
     }
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
-
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     if ((textField as string).length && !toggle) {
         /**
          * Make sure we are not attempting to set a prefix that can break commands
@@ -50,8 +47,8 @@ export function uiPREFIX(prefixResult: ModalFormResponse, onlineList: string[], 
 
         // Change Prefix command under conditions
         if ((textField as string).length <= 1 && (textField as string).length >= 1) {
-            resetPrefix(member, configuration);
-            configuration.customcommands.prefix = textField as string;
+            resetPrefix(member);
+            config.customcommands.prefix = textField as string;
             sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Prefix has been changed to '§7${textField}§f'! for §7${member.name}§f`);
             member.addTag("Prefix:" + textField);
         } else {
@@ -61,7 +58,7 @@ export function uiPREFIX(prefixResult: ModalFormResponse, onlineList: string[], 
 
     // Reset has been toggled
     if (toggle) {
-        resetPrefix(player, configuration);
+        resetPrefix(player);
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Prefix has been reset for §7${member.name}§f!`);
     }
     return paradoxui(player);

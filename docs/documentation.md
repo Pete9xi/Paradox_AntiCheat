@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Media/Paradox_Title.png" alt="Paradox AntiCheat Logo"></img>
+  <img src="https://i.imgur.com/ZS38i7c.png" alt="Paradox AntiCheat Logo">
   <br><br>
   <em>Updated for 1.20.30</em>
   <br><br>

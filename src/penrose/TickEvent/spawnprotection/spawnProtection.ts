@@ -1,8 +1,7 @@
-import { world, system, PlayerLeaveAfterEvent } from "@minecraft/server";
+import { world, system, Vector3, PlayerLeaveAfterEvent } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { PlayerExtended } from "../../../classes/PlayerExtended/Player.js";
 import { WorldExtended } from "../../../classes/WorldExtended/World.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 const playerGamemodes = new Map<string, string>(); // Map to store player IDs and gamemodes
 
@@ -22,8 +21,7 @@ function onPlayerLogout(event: PlayerLeaveAfterEvent): void {
  */
 async function spawnProtection(id: number) {
     // Get Dynamic Property for spawn protection
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const spawnProtectionBoolean = configuration.modules.spawnprotection.enabled;
+    const spawnProtectionBoolean = dynamicPropertyRegistry.get("spawnProtection_b");
 
     // Unsubscribe if spawn protection is disabled in-game
     if (!spawnProtectionBoolean) {
@@ -38,13 +36,13 @@ async function spawnProtection(id: number) {
     }
 
     // Center of the world spawn
-    const centerXYZ = configuration.modules.spawnprotection.vector3;
+    const centerXYZ: Vector3 = dynamicPropertyRegistry.get("spawnProtection_V3") as Vector3;
     // The radius to check within
-    const radius = configuration.modules.spawnprotection.radius;
+    const radius: number = dynamicPropertyRegistry.get("spawnProtection_Radius") as number;
 
     const players = world.getPlayers();
     for (const player of players) {
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Skip if the player has permission
         if (uniqueId === player.name) {

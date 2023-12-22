@@ -3,7 +3,6 @@ import { kickablePlayers } from "../../../kickcheck";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry";
 import config from "../../../data/config";
 import { ScoreManager } from "../../../classes/ScoreManager";
-import ConfigInterface from "../../../interfaces/Config";
 
 const configTicks: number = config.modules.autoBan.banHammerInterval;
 function rip(player: Player, reason: string) {
@@ -20,8 +19,7 @@ function rip(player: Player, reason: string) {
 }
 
 function autoban(id: number) {
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const autoBanBoolean = configuration.modules.autoBan.enabled;
+    const autoBanBoolean = dynamicPropertyRegistry.get("autoban_b");
 
     // Unsubscribe if disabled in-game
     if (autoBanBoolean === false) {
@@ -33,7 +31,7 @@ function autoban(id: number) {
     const players = world.getPlayers();
     players.forEach((player) => {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
         // Skip if they have permission
         if (uniqueId === player.name) {
             return;

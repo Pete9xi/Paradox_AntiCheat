@@ -1,10 +1,10 @@
 import { ChatSendAfterEvent, Player } from "@minecraft/server";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config.js";
-function biomeHelp(player: Player, prefix: string, setting: boolean) {
+function biomeHelp(player: Player, prefix: string) {
     let commandStatus;
-    if (!setting) {
+    if (!config.customcommands.biome) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -34,20 +34,17 @@ export function biome(message: ChatSendAfterEvent, args: string[]) {
     }
     const player = message.sender;
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
-
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.biome) {
-        return biomeHelp(player, prefix, configuration.customcommands.biome);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.biome) {
+        return biomeHelp(player, prefix);
     }
     const directionMap: Map<string, string> = new Map([
         ["North", "Facing: North"],

@@ -1,13 +1,13 @@
 import { ChatSendAfterEvent, Player, world, ItemStack } from "@minecraft/server";
 import { MinecraftItemTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
 import { WorldExtended } from "../../classes/WorldExtended/World";
-import ConfigInterface from "../../interfaces/Config";
 
-function giveHelp(player: Player, prefix: string, setting: boolean) {
+function giveHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.fullreport) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -46,27 +46,25 @@ export function give(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.give) {
-        return giveHelp(player, prefix, configuration.customcommands.give);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.give) {
+        return giveHelp(player, prefix);
     }
 
     // Are there arguements
     if (!args.length) {
-        return giveHelp(player, prefix, configuration.customcommands.give);
+        return giveHelp(player, prefix);
     }
 
     // Try to find the player requested

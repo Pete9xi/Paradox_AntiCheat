@@ -1,12 +1,12 @@
 import { world, Player, ChatSendAfterEvent } from "@minecraft/server";
 import { MinecraftEffectTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
-import ConfigInterface from "../../interfaces/Config";
 
-function freezeHelp(player: Player, prefix: string, setting: boolean) {
+function freezeHelp(player: Player, prefix: string) {
     let commandStatus: string;
-    if (!setting) {
+    if (!config.customcommands.freeze) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
@@ -53,27 +53,25 @@ async function handleFreeze(message: ChatSendAfterEvent, args: string[]) {
     const player = message.sender;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f You need to be Paradox-Opped to use this command.`);
     }
 
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Are there arguements
     if (!args.length) {
-        return freezeHelp(player, prefix, configuration.customcommands.freeze);
+        return freezeHelp(player, prefix);
     }
 
     // Was help requested
     const argCheck = args[0];
-    if ((argCheck && args[0].toLowerCase() === "help") || !configuration.customcommands.freeze) {
-        return freezeHelp(player, prefix, configuration.customcommands.freeze);
+    if ((argCheck && args[0].toLowerCase() === "help") || !config.customcommands.freeze) {
+        return freezeHelp(player, prefix);
     }
 
     // try to find the player requested
@@ -91,7 +89,7 @@ async function handleFreeze(message: ChatSendAfterEvent, args: string[]) {
     }
 
     // Get unique ID
-    const uniqueId2 = dynamicPropertyRegistry.getProperty(member, member?.id);
+    const uniqueId2 = dynamicPropertyRegistry.get(member?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId2 === member.name) {

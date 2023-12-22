@@ -3,7 +3,6 @@ import { sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { ChatChannelManager } from "../../../classes/ChatChannelManager.js";
 import { WorldExtended } from "../../../classes/WorldExtended/World.js";
-import ConfigInterface from "../../../interfaces/Config.js";
 
 const afterChatFilter = () => {
     // Subscribe to the 'afterChat' event
@@ -12,8 +11,7 @@ const afterChatFilter = () => {
         const { message, sender: player } = msg;
 
         // Retrieve the 'chatranks_b' dynamic property
-        const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-        const chatRanksBoolean = configuration.modules.chatranks.enabled;
+        const chatRanksBoolean = dynamicPropertyRegistry.get("chatranks_b");
 
         // Get the channel name associated with the player
         const channelName = ChatChannelManager.getPlayerChannel(player.id);
@@ -27,26 +25,6 @@ const afterChatFilter = () => {
             msg.sendToTargets = false;
 
             if (!msg.sendToTargets) {
-                /**
-                if (configuration.customcommands.tpr) {
-                    // Array for tpr
-                    const keywords = ["approve", "approved", "deny", "denied"];
-
-                    // Extracting the custom message part
-                    const messageParts = msg.message.split("§r");
-                    const extractedMessage = messageParts.length > 1 ? messageParts[1] : "";
-
-                    // Split the extracted message into words
-                    const words = extractedMessage.trim().toLowerCase().split(" ");
-
-                    // Check if the extracted message contains exactly one of the keywords and no extra words
-                    const isMatch = words.length === 1 && keywords.includes(words[0]);
-                    if (isMatch) {
-                        return;
-                    }
-                }
-                 */
-
                 if (channelName) {
                     // Retrieve player objects of members in the same channel
                     const channelMembers = ChatChannelManager.getChatChannelByName(channelName).members;
@@ -68,6 +46,7 @@ const afterChatFilter = () => {
                         targetPlayers.length = 0;
                     }
                 } else {
+                    // Send the formatted chat message to all players
                     sendMsg("@a", formattedMessage);
                 }
 

@@ -2,15 +2,8 @@ import { world, Vector3, PlayerPlaceBlockAfterEvent, system, EntityQueryOptions 
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
-import ConfigInterface from "../../../interfaces/Config.js";
-
-function getRegistry() {
-    return dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-}
-
 function freeze(id: number) {
-    const configuration = getRegistry();
-    const antiScaffoldABoolean = configuration.modules.antiscaffoldA.enabled;
+    const antiScaffoldABoolean = dynamicPropertyRegistry.get("antiscaffolda_b");
     if (antiScaffoldABoolean === false) {
         system.clearRun(id);
         return;
@@ -30,12 +23,7 @@ function freeze(id: number) {
             player.removeTag("freezeScaffoldA");
             return;
         }
-        player.onScreenDisplay.setTitle("§f§4[§6Paradox§4]§f Frozen!", {
-            subtitle: "§fContact Staff §4[§6AntiScaffoldA§4]§f",
-            fadeInDuration: 0,
-            fadeOutDuration: 0,
-            stayDuration: 60,
-        });
+        player.onScreenDisplay.setTitle("§f§4[§6Paradox§4]§f Frozen!", { subtitle: "§fContact Staff §4[§6AntiScaffoldA§4]§f", fadeInDuration: 0, fadeOutDuration: 0, stayDuration: 60 });
     }
 }
 
@@ -56,8 +44,7 @@ function isBlockInFrontAndBelowPlayer(blockLocation: Vector3, playerLocation: Ve
 
 async function scaffolda(object: PlayerPlaceBlockAfterEvent) {
     // Get Dynamic Property
-    const configuration = getRegistry();
-    const antiScaffoldABoolean = configuration.modules.antiscaffoldA.enabled;
+    const antiScaffoldABoolean = dynamicPropertyRegistry.get("antiscaffolda_b");
     // Unsubscribe if disabled in-game
     if (antiScaffoldABoolean === false) {
         world.afterEvents.playerPlaceBlock.unsubscribe(scaffolda);
@@ -68,7 +55,7 @@ async function scaffolda(object: PlayerPlaceBlockAfterEvent) {
     const { block, player, dimension } = object;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Skip if they have permission
     if (uniqueId === player.name) {

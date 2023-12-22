@@ -2,7 +2,6 @@ import { Player, world, system } from "@minecraft/server";
 import { MinecraftBlockTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index";
 import { sendMsgToPlayer, setTimer } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import ConfigInterface from "../../../interfaces/Config";
 
 // Make sure they don't tp inside a solid block
 function safetyProtocol(player: Player, x: number, y: number, z: number) {
@@ -35,13 +34,12 @@ function safetyProtocol(player: Player, x: number, y: number, z: number) {
 
 function worldborder(id: number) {
     // Dynamic Properties for boolean
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const worldBorderBoolean = configuration.modules.worldBorder.enabled;
+    const worldBorderBoolean = dynamicPropertyRegistry.get("worldborder_b");
 
     // Dynamic Properties for number
-    const worldBorderOverworldNumber = configuration.modules.worldBorder.overworld;
-    const worldBorderNetherNumber = configuration.modules.worldBorder.nether;
-    const worldBorderEndNumber = configuration.modules.worldBorder.end;
+    const worldBorderOverworldNumber = dynamicPropertyRegistry.get("worldborder_n");
+    const worldBorderNetherNumber = dynamicPropertyRegistry.get("worldborder_nether_n");
+    const worldBorderEndNumber = dynamicPropertyRegistry.get("worldborder_end_n");
 
     // Unsubscribe if disabled in-game
     if (worldBorderBoolean === false) {
@@ -51,7 +49,7 @@ function worldborder(id: number) {
     const players = world.getPlayers();
     for (const player of players) {
         // Get unique ID
-        const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+        const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
         // Skip if they have permission
         if (uniqueId === player.name) {
@@ -118,23 +116,13 @@ function worldborder(id: number) {
                 const teleportToBorder = (x: number, z: number) => {
                     const safe = safetyProtocol(player, x, y, z);
                     setTimer(player.id);
-                    player.teleport(
-                        { x: x, y: safe, z: z },
-                        {
-                            dimension: player.dimension,
-                            rotation: { x: 0, y: 0 },
-                            facingLocation: { x: 0, y: 0, z: 0 },
-                            checkForBlocks: true,
-                            keepVelocity: false,
-                        }
-                    );
+                    player.teleport({ x: x, y: safe, z: z }, { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
                 };
 
                 const targetX = x < -overworldSize ? -border + 6 : x >= overworldSize ? border - 6 : x;
                 const targetZ = z < -overworldSize ? -border + 6 : z >= overworldSize ? border - 6 : z;
                 teleportToBorder(targetX, targetZ);
             }
-            continue;
         }
 
         // Nether
@@ -149,23 +137,13 @@ function worldborder(id: number) {
                 const teleportToBorder = (x: number, z: number) => {
                     const safe = safetyProtocol(player, x, y, z);
                     setTimer(player.id);
-                    player.teleport(
-                        { x: x, y: safe, z: z },
-                        {
-                            dimension: player.dimension,
-                            rotation: { x: 0, y: 0 },
-                            facingLocation: { x: 0, y: 0, z: 0 },
-                            checkForBlocks: true,
-                            keepVelocity: false,
-                        }
-                    );
+                    player.teleport({ x: x, y: safe, z: z }, { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
                 };
 
                 const targetX = x < -netherSize ? -border + 6 : x >= netherSize ? border - 6 : x;
                 const targetZ = z < -netherSize ? -border + 6 : z >= netherSize ? border - 6 : z;
                 teleportToBorder(targetX, targetZ);
             }
-            continue;
         }
 
         // Nether
@@ -180,23 +158,13 @@ function worldborder(id: number) {
                 const teleportToBorder = (x: number, z: number) => {
                     const safe = safetyProtocol(player, x, y, z);
                     setTimer(player.id);
-                    player.teleport(
-                        { x: x, y: safe, z: z },
-                        {
-                            dimension: player.dimension,
-                            rotation: { x: 0, y: 0 },
-                            facingLocation: { x: 0, y: 0, z: 0 },
-                            checkForBlocks: true,
-                            keepVelocity: false,
-                        }
-                    );
+                    player.teleport({ x: x, y: safe, z: z }, { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
                 };
 
                 const targetX = x < -endSize ? -border + 6 : x >= endSize ? border - 6 : x;
                 const targetZ = z < -endSize ? -border + 6 : z >= endSize ? border - 6 : z;
                 teleportToBorder(targetX, targetZ);
             }
-            continue;
         }
     }
 }

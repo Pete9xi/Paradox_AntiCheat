@@ -1,18 +1,18 @@
-import { ChatSendAfterEvent, Player, world } from "@minecraft/server";
+import { ChatSendAfterEvent, Player, Vector3, world } from "@minecraft/server";
+import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer, sendMsg } from "../../util.js";
 import { PlayerExtended } from "../../classes/PlayerExtended/Player.js";
-import ConfigInterface from "../../interfaces/Config.js";
 
-function rankHelp(player: Player, prefix: string, configuration: ConfigInterface) {
+function rankHelp(player: Player, prefix: string, chatRanksBoolean: string | number | boolean | Vector3) {
     let commandStatus: string;
-    if (!configuration.customcommands.rank || !configuration.customcommands.chatranks) {
+    if (!config.customcommands.rank || !config.customcommands.chatranks) {
         commandStatus = "§6[§4DISABLED§6]§f";
     } else {
         commandStatus = "§6[§aENABLED§6]§f";
     }
     let moduleStatus: string;
-    if (configuration.modules.chatranks.enabled === false || !configuration.customcommands.chatranks) {
+    if (chatRanksBoolean === false || !config.customcommands.chatranks) {
         moduleStatus = "§6[§4DISABLED§6]§f";
     } else {
         moduleStatus = "§6[§aENABLED§6]§f";
@@ -55,7 +55,7 @@ export function rank(message: ChatSendAfterEvent, args: string[]) {
     player.nameTag = player.name;
 
     // Get unique ID
-    const uniqueId = dynamicPropertyRegistry.getProperty(player, player?.id);
+    const uniqueId = dynamicPropertyRegistry.get(player?.id);
 
     // Make sure the user has permissions to run the command
     if (uniqueId !== player.name) {
@@ -63,20 +63,20 @@ export function rank(message: ChatSendAfterEvent, args: string[]) {
     }
 
     // Get Dynamic Property Boolean
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
+    const chatRanksBoolean = dynamicPropertyRegistry.get("chatranks_b");
 
     // Check for custom prefix
     const prefix = getPrefix(player);
 
     // Are there arguements
     if (!args.length) {
-        return rankHelp(player, prefix, configuration);
+        return rankHelp(player, prefix, chatRanksBoolean);
     }
 
     // Was help requested
     const argCheck = args[0].toLowerCase();
-    if (argCheck === "help" || !configuration.customcommands.rank || !configuration.modules.chatranks.enabled || !configuration.customcommands.chatranks) {
-        return rankHelp(player, prefix, configuration);
+    if (argCheck === "help" || !config.customcommands.rank || !chatRanksBoolean || !config.customcommands.chatranks) {
+        return rankHelp(player, prefix, chatRanksBoolean);
     }
 
     const playerName = args.slice(0, -1).join(" "); // Combine all arguments except the last one as the player name
@@ -118,7 +118,7 @@ export function rank(message: ChatSendAfterEvent, args: string[]) {
         member.addTag(newRank);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${member.name}§f has reset their rank`);
     } else {
-        return rankHelp(player, prefix, configuration);
+        return rankHelp(player, prefix, chatRanksBoolean);
     }
 
     if (player === member) {

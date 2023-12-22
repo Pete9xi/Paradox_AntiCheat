@@ -1,15 +1,13 @@
-import { Player } from "@minecraft/server";
+import { Player, Vector3 } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../../../penrose/WorldInitializeAfterEvent/registry";
 import { uiSpawnProtection } from "../../../modules/uispawnProtections";
-import ConfigInterface from "../../../../interfaces/Config";
 
 export function spawnProtectionHandler(player: Player) {
     const modulesspui = new ModalFormData();
-    const configuration = dynamicPropertyRegistry.getProperty(undefined, "paradoxConfig") as ConfigInterface;
-    const spawnProtectionBoolean = configuration.modules.spawnprotection.enabled;
-    const spawnProtectionVector3 = configuration.modules.spawnprotection.vector3;
-    const spawnProtectionRadius = configuration.modules.spawnprotection.radius;
+    const spawnProtectionBoolean = dynamicPropertyRegistry.get("spawnProtection_b") as boolean;
+    const spawnProtectionVector3 = dynamicPropertyRegistry.get("spawnProtection_V3") as Vector3;
+    const spawnProtectionRadius = dynamicPropertyRegistry.get("spawnProtection_Radius") as number;
     modulesspui.title("§4Paradox Modules - Spawn Protection§4");
     modulesspui.toggle("Enable Spawn Protection - ", spawnProtectionBoolean);
     modulesspui.textField("X Coordinate", "0", spawnProtectionVector3.x.toString());
