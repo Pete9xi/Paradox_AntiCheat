@@ -130,7 +130,7 @@ async function handleUIInventory(inventoryUIResult: ModalFormResponse, onlineLis
         ["birch_fence", "blocks/planks_birch"],
         ["birch_fence_gate", "blocks/planks_birch"],
         ["birch_hanging_sign", "blocks/birch_hanging_sign"],
-        ["birch_log", "log_birch"],
+        ["birch_log", "blocks/log_birch_top"],
         ["birch_pressure_plate", "blocks/planks_birch"],
         ["birch_stairs", "blocks/planks_birch"],
         ["birch_standing_sign", "items/sign_birch"],
