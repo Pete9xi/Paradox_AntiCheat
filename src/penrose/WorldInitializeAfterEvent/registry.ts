@@ -94,6 +94,13 @@ function registry() {
                 }
             }
         }
+        /**
+         * This is global security for strings where applicable
+         */
+        const salt = world.getDynamicProperty("crypt");
+        if (salt === undefined) {
+            world.setDynamicProperty("crypt", (world as WorldExtended).generateRandomUUID());
+        }
         // If no matching boolean property was found, execute the else block
         if (!flag) {
             // We conditionally test if the dynamic property already exists
