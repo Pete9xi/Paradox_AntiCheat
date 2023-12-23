@@ -33,7 +33,7 @@ export function uiSAVEDLOCATIONS(savedlocationsResult: ModalFormResponse, Locati
     if (teleportToSelectedLocation === true) {
         //Teleport the player to the location set in the dropdown.
         setTimer(player.id);
-        player.teleport({ x: x, y: y, z: z }, { dimension: world.getDimension(dimension), rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
+        player.teleport({ x: x, y: y, z: z }, { dimension: world.getDimension(dimension), rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
         sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Welcome back!`);
         return player;
     }

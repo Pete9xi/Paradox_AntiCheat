@@ -167,7 +167,7 @@ async function handleGoHome(message: ChatSendAfterEvent, args: string[]) {
             // This timer is a grace period
             setTimer(player.id);
             sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f Welcome back!`);
-            player.teleport({ x: homex, y: homey, z: homez }, { dimension: world.getDimension(dimension), rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
+            player.teleport({ x: homex, y: homey, z: homez }, { dimension: world.getDimension(dimension), rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
             // Delete old key and value
             cooldownTimer.delete(player);
             // Create new key and value with current time in milliseconds

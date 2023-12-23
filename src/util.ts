@@ -29,7 +29,7 @@ world.afterEvents.playerLeave.subscribe(onPlayerLogout);
  */
 export function flag(player: Player, check: string, checkType: string, hackType: string, item: string, stack: number, debugName: string, debug: string, shouldTP: boolean) {
     if (shouldTP) {
-        player.teleport(new Vector(player.location.x, player.location.y, player.location.z), { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
+        player.teleport(new Vector(player.location.x, player.location.y, player.location.z), { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
     }
 
     ScoreManager.setScore(player, `${check.toLowerCase()}vl`, 1, true);

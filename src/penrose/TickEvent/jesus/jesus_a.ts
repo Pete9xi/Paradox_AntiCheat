@@ -14,7 +14,7 @@ function onPlayerLogout(event: PlayerLeaveAfterEvent): void {
 }
 
 function timer(player: Player, dimension: Dimension, x: number, y: number, z: number) {
-    player.teleport({ x: x, y: y - 2, z: z }, { dimension: dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: false, keepVelocity: false });
+    player.teleport({ x: x, y: y - 2, z: z }, { dimension: dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
     playerCount.set(player.id, 0);
 }
 

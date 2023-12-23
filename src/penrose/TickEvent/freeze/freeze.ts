@@ -14,7 +14,7 @@ function freezePlayer(player: Player) {
         dimension: world.getDimension("overworld"),
         rotation: player.getRotation(),
         facingLocation: player.getViewDirection(),
-        checkForBlocks: false,
+        checkForBlocks: true,
         keepVelocity: false,
     });
 

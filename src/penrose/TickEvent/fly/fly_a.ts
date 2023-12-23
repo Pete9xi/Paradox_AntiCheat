@@ -131,7 +131,7 @@ function handlePotentialFlying(player: Player): void {
             dimension: player.dimension,
             rotation: { x: 0, y: 0 },
             facingLocation: { x: 0, y: 0, z: 0 },
-            checkForBlocks: false,
+            checkForBlocks: true,
             keepVelocity: false,
         });
 
