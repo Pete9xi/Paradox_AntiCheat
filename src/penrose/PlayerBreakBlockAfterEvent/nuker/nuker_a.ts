@@ -205,7 +205,7 @@ async function afternukera(
     const requiredTimeDifference = efficiencyLevels[itemEfficiencyLevel];
 
     if (!vegetation.includes(brokenBlockPermutation.type.id as MinecraftBlockTypes) && lastBreakInSeconds && lastBreakInSeconds < requiredTimeDifference) {
-        if (counter >= 3) {
+        if (counter >= 5) {
             const blockLoc = dimension.getBlock({ x: x, y: y, z: z });
             const blockID = brokenBlockPermutation.clone();
 
