@@ -180,6 +180,7 @@ async function afternukera(
         MinecraftBlockTypes.SnowLayer,
         MinecraftBlockTypes.PowderSnow,
         MinecraftBlockTypes.RedstoneWire,
+        MinecraftBlockTypes.Scaffolding,
     ];
 
     const efficiencyLevels: Record<number, number> = {
