@@ -2,6 +2,8 @@ import { world, PlayerBreakBlockAfterEvent, system, EntityQueryOptions, PlayerLe
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
+import config from "../../../data/config.js";
+import { kickablePlayers } from "../../../kickcheck.js";
 
 const lastBreakTime = new Map<string, number>();
 
@@ -233,6 +235,12 @@ async function afternukera(
             }
             // Reset breakCount after three or more consecutive block breaks
             breakData.set(player.id, { breakCount: 0, lastBreakTimeBefore: now });
+            //Has the user asked us to kick players?
+            if (config.modules.antinukerA.kick == true) {
+                player.runCommandAsync(`kick "${player.name}" §f§4[§6Paradox§4]§f You have been kicked for nuking.`);
+                kickablePlayers.add(player);
+                player.triggerEvent("paradox:kick");
+            }
             return;
         } else {
             const increment = breakData.get(player.id).breakCount + 1;

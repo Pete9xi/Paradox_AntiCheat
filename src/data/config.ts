@@ -167,6 +167,7 @@ export default {
         },
         antinukerA: {
             enabled: true,
+            kick: false,
         },
         xrayA: {
             enabled: true,
