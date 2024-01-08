@@ -1,5 +1,5 @@
 import { world, PlayerBreakBlockAfterEvent, system, EntityQueryOptions, PlayerLeaveAfterEvent, EntityInventoryComponent, ItemEnchantsComponent, PlayerBreakBlockBeforeEvent } from "@minecraft/server";
-import { flag } from "../../../util.js";
+import { flag, sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
 import config from "../../../data/config.js";
@@ -183,6 +183,8 @@ async function afternukera(
         MinecraftBlockTypes.PowderSnow,
         MinecraftBlockTypes.RedstoneWire,
         MinecraftBlockTypes.Scaffolding,
+        MinecraftBlockTypes.Slime,
+        MinecraftBlockTypes.HoneyBlock,
     ];
 
     const efficiencyLevels: Record<number, number> = {
@@ -240,6 +242,7 @@ async function afternukera(
                 player.runCommandAsync(`kick "${player.name}" §f§4[§6Paradox§4]§f You have been kicked for nuking.`);
                 kickablePlayers.add(player);
                 player.triggerEvent("paradox:kick");
+                sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f ${player.name} has been kicked by NukerA, BlockID: ${brokenBlockPermutation.type.id}`);
             }
             return;
         } else {
