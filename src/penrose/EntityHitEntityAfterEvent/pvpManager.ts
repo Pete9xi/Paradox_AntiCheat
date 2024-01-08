@@ -1,6 +1,7 @@
-import { world, Player, EntityHitEntityAfterEvent, PlayerLeaveAfterEvent, EntityDieAfterEvent } from "@minecraft/server";
+import { world, Player, EntityHitEntityAfterEvent, ProjectileHitEntityAfterEvent, PlayerLeaveAfterEvent, EntityDieAfterEvent } from "@minecraft/server";
 import { sendMsg, sendMsgToPlayer } from "../../util.js";
 import { MinecraftEffectTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import { kickablePlayers } from "../../kickcheck.js";
 
 const pvpData = new Map<string, { counter: number; lastAttackedName: string }>();
 
@@ -21,7 +22,41 @@ function onPlayerLogout(event: PlayerLeaveAfterEvent): void {
     const playerId = event.playerId;
     pvpData.delete(playerId);
 }
+function pvpProjectile(event: ProjectileHitEntityAfterEvent) {
+    const { source } = event;
+    const data = event.getEntityHit();
+    if (!(source instanceof Player) || !(data.entity instanceof Player)) {
+        return;
+    }
+    if (data.entity.hasTag("pvpDisabled")) {
+        sendMsgToPlayer(source, `§f§4[§6Paradox§4]§f This player has PVP Disabled!`);
+        const effectsToAdd = [MinecraftEffectTypes.InstantHealth];
+        for (const effectType of effectsToAdd) {
+            data.entity.addEffect(effectType, 5, { amplifier: 255, showParticles: false });
+        }
+        const hitEntityId = data.entity.id;
+        const pvpDataForHitEntity = pvpData.get(hitEntityId) || { counter: 0, lastAttackedName: "" };
 
+        if (data.entity.name === pvpDataForHitEntity.lastAttackedName) {
+            pvpDataForHitEntity.counter++;
+        } else {
+            pvpDataForHitEntity.lastAttackedName = data.entity.name;
+            pvpDataForHitEntity.counter = 0;
+        }
+
+        if (pvpDataForHitEntity.counter === 10) {
+            sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${source.name}§f has attacked §7${data.entity.name}§f while §7${data.entity.name}§f has PVP disabled.`);
+            pvpDataForHitEntity.counter = 0;
+            source.runCommandAsync(`kick "${source.name}" §f§4[§6Paradox§4]§f You engaged in pvp with a player who has disabled PVP you were warned 9 times, as a result you have been kicked.`);
+            kickablePlayers.add(source);
+            source.triggerEvent("paradox:kick");
+            sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f ${source.name} has been kicked by pvpManager.`);
+        }
+
+        pvpData.set(hitEntityId, pvpDataForHitEntity);
+        return;
+    }
+}
 function pvp(obj: EntityHitEntityAfterEvent) {
     const { damagingEntity, hitEntity } = obj;
 
@@ -71,5 +106,6 @@ function pvp(obj: EntityHitEntityAfterEvent) {
 export const PVP = () => {
     world.afterEvents.entityDie.subscribe(punishment);
     world.afterEvents.entityHitEntity.subscribe(pvp);
+    world.afterEvents.projectileHitEntity.subscribe(pvpProjectile);
     world.afterEvents.playerLeave.subscribe(onPlayerLogout);
 };
