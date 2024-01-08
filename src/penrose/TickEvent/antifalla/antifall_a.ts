@@ -1,6 +1,7 @@
 import { world, EntityQueryOptions, GameMode, system, Block } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
+import { MinecraftEffectTypes } from "@minecraft/vanilla-data";
 
 function antifalla(id: number) {
     // Get Dynamic Property
@@ -44,6 +45,12 @@ function antifalla(id: number) {
 
         // Skip if they have permission
         if (uniqueId === player.name) {
+            continue;
+        }
+        if (player.isSleeping) {
+            continue;
+        }
+        if (player.getEffect(MinecraftEffectTypes.Levitation)) {
             continue;
         }
 
