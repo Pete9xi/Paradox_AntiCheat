@@ -1,4 +1,4 @@
-import { world, EntityQueryOptions, GameMode, system, Block } from "@minecraft/server";
+import { world, EntityQueryOptions, GameMode, system, Block, EntityEquippableComponent, EquipmentSlot, ItemEnchantsComponent, Enchantment } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftEffectTypes } from "@minecraft/vanilla-data";
@@ -52,6 +52,26 @@ function antifalla(id: number) {
         }
         if (player.getEffect(MinecraftEffectTypes.Levitation)) {
             continue;
+        }
+        //trident check
+        const equipment = player.getComponent("equippable") as EntityEquippableComponent;
+        const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
+        if (mainhand && mainhand.typeId === "minecraft:trident") {
+            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
+            const enchantmentList = enchantmentsComponent.enchantments;
+            const iterator = enchantmentList[Symbol.iterator]();
+            let iteratorResult = iterator.next();
+            let targetEnchant = false;
+            while (!iteratorResult.done) {
+                const enchantment: Enchantment = iteratorResult.value;
+                if (enchantment.type.id === "riptide") {
+                    targetEnchant = true;
+                }
+                iteratorResult = iterator.next();
+            }
+            if (targetEnchant === true) {
+                continue;
+            }
         }
 
         const { x, y, z } = player.location;
