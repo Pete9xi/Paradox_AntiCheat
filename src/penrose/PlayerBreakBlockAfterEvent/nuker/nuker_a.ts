@@ -219,31 +219,32 @@ async function afternukera(
             lastBreakTime.delete(player.id);
 
             player.runCommandAsync(`kill @e[x=${x},y=${y},z=${z},r=10,c=1,type=item]`);
-
-            // Apply effects or actions for three or more consecutive block breaks
-            const effectsToAdd = [MinecraftEffectTypes.Blindness, MinecraftEffectTypes.MiningFatigue, MinecraftEffectTypes.Weakness, MinecraftEffectTypes.Slowness];
-
-            for (const effectType of effectsToAdd) {
-                player.addEffect(effectType, 1000000, { amplifier: 255, showParticles: true });
-            }
-
-            const hasFreezeTag = player.hasTag("paradoxFreeze");
-            const hasNukerFreeze = player.hasTag("freezeNukerA");
-            if (!hasFreezeTag) {
-                player.addTag("paradoxFreeze");
-            }
-            if (!hasNukerFreeze) {
-                player.addTag("freezeNukerA");
-            }
-            // Reset breakCount after three or more consecutive block breaks
-            breakData.set(player.id, { breakCount: 0, lastBreakTimeBefore: now });
-            //Has the user asked us to kick players?
+            //Kick or Freeze?
             if (config.modules.antinukerA.kick == true) {
                 player.runCommandAsync(`kick "${player.name}" §f§4[§6Paradox§4]§f You have been kicked for nuking.`);
                 kickablePlayers.add(player);
                 player.triggerEvent("paradox:kick");
                 sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f ${player.name} has been kicked by NukerA, BlockID: ${brokenBlockPermutation.type.id}`);
+            } else {
+                // Apply effects or actions for three or more consecutive block breaks
+                const effectsToAdd = [MinecraftEffectTypes.Blindness, MinecraftEffectTypes.MiningFatigue, MinecraftEffectTypes.Weakness, MinecraftEffectTypes.Slowness];
+
+                for (const effectType of effectsToAdd) {
+                    player.addEffect(effectType, 1000000, { amplifier: 255, showParticles: true });
+                }
+
+                const hasFreezeTag = player.hasTag("paradoxFreeze");
+                const hasNukerFreeze = player.hasTag("freezeNukerA");
+                if (!hasFreezeTag) {
+                    player.addTag("paradoxFreeze");
+                }
+                if (!hasNukerFreeze) {
+                    player.addTag("freezeNukerA");
+                }
             }
+            // Reset breakCount after three or more consecutive block breaks
+            breakData.set(player.id, { breakCount: 0, lastBreakTimeBefore: now });
+
             return;
         } else {
             const increment = breakData.get(player.id).breakCount + 1;
