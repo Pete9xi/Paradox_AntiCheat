@@ -1,4 +1,4 @@
-import { world, PlayerBreakBlockAfterEvent, system, EntityQueryOptions, PlayerLeaveAfterEvent, EntityInventoryComponent, ItemEnchantsComponent, PlayerBreakBlockBeforeEvent } from "@minecraft/server";
+import { world, PlayerBreakBlockAfterEvent, system, EntityQueryOptions, PlayerLeaveAfterEvent, EntityInventoryComponent, ItemEnchantableComponent, PlayerBreakBlockBeforeEvent, ItemComponentTypes } from "@minecraft/server";
 import { flag, sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
@@ -204,8 +204,9 @@ async function afternukera(
     const inventory = player.getComponent("inventory") as EntityInventoryComponent;
     const container = inventory.container;
     const item = container.getItem(hand);
-    const itemEnchantmentComponent = item?.getComponent("enchantments") as ItemEnchantsComponent;
-    const itemEfficiencyLevel = itemEnchantmentComponent?.enchantments?.getEnchantment("efficiency")?.level || 0;
+    //const itemEnchantmentComponent = item?.getComponent("enchantments") as ItemEnchantsComponent;
+    const itemEnchantmentComponent = item?.getComponent(ItemComponentTypes.Enchantable);
+    const itemEfficiencyLevel = itemEnchantmentComponent?.getEnchantment("efficiency")?.level || 0;
 
     const requiredTimeDifference = efficiencyLevels[itemEfficiencyLevel];
 
