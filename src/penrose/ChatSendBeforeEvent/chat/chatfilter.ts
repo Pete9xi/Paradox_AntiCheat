@@ -48,6 +48,10 @@ const beforeChatFilter = () => {
                 player.sendMessage(msgToSendViaChannel);
             });
         }
+        //Vanilla chat
+        if (channelName === null) {
+            player.sendMessage(`§f<${player.name}> §r${message}`);
+        }
     });
 };
 
