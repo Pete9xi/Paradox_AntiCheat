@@ -95,28 +95,15 @@ export function uiSTATS(statsResult: ModalFormResponse, onlineList: string[], pl
         if (!(verification instanceof ItemStack)) {
             continue;
         }
-        const enchantedEquipment = verification.getComponent("enchantable") as ItemEnchantableComponent;
-        const enchantList = enchantedEquipment.getEnchantments();
-
+        const enchantedEquipment = verification.getComponent("enchantable");
         let isEnchanted = false;
-
-        // Iterate through each enchantment type
-        for (const enchant in MinecraftEnchantmentTypes) {
-            const enchantmentArray = Array.from(enchantList); // Convert the iterable to an array
-            const enchantNumber = enchantmentArray.some((enchantment) => enchantment.type === MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes]);
-            if (enchantNumber) {
-                isEnchanted = true;
-                break; // Exit the loop if any enchantment is found
-            }
-        }
-
+        if (enchantedEquipment) isEnchanted = true;
         let materialType = verification.typeId.split(":")[1].replace(/_\w+/, "");
         if (armorType === "Mainhand" || armorType === "Offhand") {
             materialType = verification.typeId.split(":")[1];
         }
-
         const materialColor = materialColors[materialType] || materialColors["none"];
-        reportBody.push(`§7${armorType}§f: ${isEnchanted ? "§aEnchanted§f" : "§4Unenchanted§f"} || ${materialColor}${materialType}\n`);
+        reportBody.push(`§f§4[§6Paradox§4]§f §7${armorType}§f: ${isEnchanted ? "§aEnchanted§f" : "§4Unenchanted§f"} || ${materialColor}${materialType}`);
     }
 
     const ResultsUI = new ActionFormData();
