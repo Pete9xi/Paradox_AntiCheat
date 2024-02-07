@@ -65,7 +65,8 @@ function antifalla(id: number) {
             let targetEnchant = false;
             while (!iteratorResult.done) {
                 const enchantment: Enchantment = iteratorResult.value;
-                if (enchantment.type === "riptide") {
+                //@ts-ignore
+                if (enchantment.type.id === "riptide") {
                     targetEnchant = true;
                 }
                 iteratorResult = iterator.next();
