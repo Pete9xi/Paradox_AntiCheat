@@ -191,7 +191,8 @@ export function commandHandler(player: Player, message: ChatSendBeforeEvent): Pr
 
     // checks if the message starts with our prefix, if not exit
     if (!message.message.startsWith(config.customcommands.prefix)) {
-        return void 0;
+        message.cancel = true;
+        return;
     }
 
     const args = message.message.slice(config.customcommands.prefix.length).split(/ +/);
