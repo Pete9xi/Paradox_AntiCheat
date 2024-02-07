@@ -28,7 +28,7 @@ export function uiItemEditorStats(player: Player, targetPlayer: Player, itemSlot
 
         while (!iteratorResult.done) {
             const enchantment: Enchantment = iteratorResult.value;
-            enchantmentNames.push("§6" + enchantment.type + ": §5" + enchantment.level.toString());
+            enchantmentNames.push("§6" + enchantment.type.toString + ": §5" + enchantment.level.toString());
             iteratorResult = iterator.next();
         }
         //format the array data so that is shows correctly in the UI

@@ -1,4 +1,4 @@
-import { ChatSendAfterEvent, ChatSendBeforeEvent, Player, world } from "@minecraft/server";
+import { ChatSendAfterEvent, ChatSendBeforeEvent, Player, system } from "@minecraft/server";
 import config from "../data/config.js";
 import { sendMsgToPlayer } from "../util.js";
 
@@ -190,25 +190,28 @@ export function commandHandler(player: Player, message: ChatSendBeforeEvent): Pr
     }
 
     // checks if the message starts with our prefix, if not exit
-    if (!message.message.startsWith(config.customcommands.prefix)) return void 0;
+    if (!message.message.startsWith(config.customcommands.prefix)) {
+        return void 0;
+    }
 
     const args = message.message.slice(config.customcommands.prefix.length).split(/ +/);
-
     const commandName = args.shift().toLowerCase();
 
-    if (config.debug) console.warn(`${new Date()} | "${player.name}" used the command: ${config.customcommands.prefix}${commandName} ${args.join(" ")}`);
+    if (config.debug) {
+        console.warn(`${new Date()} | "${player.name}" used the command: ${config.customcommands.prefix}${commandName} ${args.join(" ")}`);
+    }
 
     if (!(commandName in commandDefinitions)) {
         message.cancel = true;
-        // message.sendToTargets = true;
-        //message.setTargets([]);
-        //message.message = "";
-
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f The command §7${config.customcommands.prefix}${commandName}§f does not exist. Try again!`);
     }
 
-    // Do not broadcast any message to any targets
-    // message.sendToTargets = true;
+    // Call the corresponding function from commandDefinitions
+    system.run(() => {
+        commandDefinitions[commandName](message, args, message.message.slice(config.customcommands.prefix.length + commandName.length + 1));
+    });
+    // Cancel the message after handling the command
+    message.cancel = true;
 }
 
 export function handleCommandAfterSend(chatSendAfterEvent: ChatSendAfterEvent): void {
