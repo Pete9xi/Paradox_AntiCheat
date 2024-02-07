@@ -90,7 +90,8 @@ export function invsee(message: ChatSendAfterEvent, args: string[]) {
                     const enchantmentList = enchantmentComponent.getEnchantments();
 
                     if (enchantmentList.length > 0) {
-                        const enchantmentNames = enchantmentList.map((enchantment) => `        §6- §4[§f${enchantment.type}§4]§f §6Level: §4${enchantment.level}`);
+                        //@ts-ignore
+                        const enchantmentNames = enchantmentList.map((enchantment) => `        §6- §4[§f${enchantment.type.id}§4]§f §6Level: §4${enchantment.level}`);
                         enchantmentInfo = `\n    §4[§6Enchantments§4]§6:\n${enchantmentNames.join("\n")}`;
                     }
                     if (enchantmentInfo) {
