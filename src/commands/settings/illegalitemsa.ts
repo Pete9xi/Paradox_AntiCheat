@@ -1,7 +1,7 @@
 import { getPrefix, sendMsg, sendMsgToPlayer } from "../../util.js";
 import config from "../../data/config.js";
 import { ChatSendAfterEvent, Player, Vector3, world } from "@minecraft/server";
-import { IllegalItemsA } from "../../penrose/TickEvent/illegalitems/illegalitems_a.js";
+//import { IllegalItemsA } from "../../penrose/TickEvent/illegalitems/illegalitems_a.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 
 function illegalItemsAHelp(player: Player, prefix: string, illegalItemsABoolean: string | number | boolean | Vector3) {
@@ -72,7 +72,7 @@ export function illegalitemsA(message: ChatSendAfterEvent, args: string[]) {
             temp.addTag("illegalitemsA");
         }
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has enabled §6IllegalItemsA§f!`);
-        IllegalItemsA();
+        //IllegalItemsA();
     } else if (illegalItemsABoolean === true) {
         // Deny
         dynamicPropertyRegistry.set("illegalitemsa_b", false);

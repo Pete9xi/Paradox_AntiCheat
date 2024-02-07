@@ -1,7 +1,7 @@
-import { world, EntityQueryOptions, GameMode, system, Block, EntityEquippableComponent, EquipmentSlot, ItemEnchantsComponent, Enchantment } from "@minecraft/server";
+import { world, EntityQueryOptions, GameMode, system, Block, EntityEquippableComponent, EquipmentSlot, Enchantment, ItemComponentTypes } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import { MinecraftEffectTypes } from "@minecraft/vanilla-data";
+import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
 
 function antifalla(id: number) {
     // Get Dynamic Property
@@ -57,14 +57,15 @@ function antifalla(id: number) {
         const equipment = player.getComponent("equippable") as EntityEquippableComponent;
         const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
         if (mainhand && mainhand.typeId === "minecraft:trident") {
-            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
-            const enchantmentList = enchantmentsComponent.enchantments;
+            const enchantmentsComponent = mainhand.getComponent(ItemComponentTypes.Enchantable);
+            const enchantmentList = enchantmentsComponent.getEnchantments;
+            //@ts-ignore
             const iterator = enchantmentList[Symbol.iterator]();
             let iteratorResult = iterator.next();
             let targetEnchant = false;
             while (!iteratorResult.done) {
                 const enchantment: Enchantment = iteratorResult.value;
-                if (enchantment.type.id === "riptide") {
+                if (enchantment.type === "riptide") {
                     targetEnchant = true;
                 }
                 iteratorResult = iterator.next();

@@ -1,4 +1,4 @@
-import { EntityEquippableComponent, EquipmentSlot, ItemEnchantsComponent, ItemStack, Player, world } from "@minecraft/server";
+import { EntityEquippableComponent, EquipmentSlot, ItemStack, Player, world, ItemEnchantableComponent } from "@minecraft/server";
 import { MinecraftEnchantmentTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
 import { ActionFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
@@ -95,22 +95,26 @@ export function uiSTATS(statsResult: ModalFormResponse, onlineList: string[], pl
         if (!(verification instanceof ItemStack)) {
             continue;
         }
-        const enchantedEquipment = verification.getComponent("enchantments") as ItemEnchantsComponent;
-        const enchantList = enchantedEquipment.enchantments;
-        if (!enchantList) {
-            continue;
-        }
+        const enchantedEquipment = verification.getComponent("enchantable") as ItemEnchantableComponent;
+        const enchantList = enchantedEquipment.getEnchantments();
+
         let isEnchanted = false;
+
+        // Iterate through each enchantment type
         for (const enchant in MinecraftEnchantmentTypes) {
-            const enchantNumber = enchantList.hasEnchantment(MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes]);
-            if (enchantNumber > 0) {
+            const enchantmentArray = Array.from(enchantList); // Convert the iterable to an array
+            const enchantNumber = enchantmentArray.some((enchantment) => enchantment.type === MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes]);
+            if (enchantNumber) {
                 isEnchanted = true;
+                break; // Exit the loop if any enchantment is found
             }
         }
+
         let materialType = verification.typeId.split(":")[1].replace(/_\w+/, "");
         if (armorType === "Mainhand" || armorType === "Offhand") {
             materialType = verification.typeId.split(":")[1];
         }
+
         const materialColor = materialColors[materialType] || materialColors["none"];
         reportBody.push(`§7${armorType}§f: ${isEnchanted ? "§aEnchanted§f" : "§4Unenchanted§f"} || ${materialColor}${materialType}\n`);
     }

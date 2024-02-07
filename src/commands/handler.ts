@@ -1,4 +1,4 @@
-import { ChatSendAfterEvent, ChatSendBeforeEvent, Player } from "@minecraft/server";
+import { ChatSendAfterEvent, ChatSendBeforeEvent, Player, world } from "@minecraft/server";
 import config from "../data/config.js";
 import { sendMsgToPlayer } from "../util.js";
 
@@ -200,14 +200,15 @@ export function commandHandler(player: Player, message: ChatSendBeforeEvent): Pr
 
     if (!(commandName in commandDefinitions)) {
         message.cancel = true;
-        message.sendToTargets = true;
-        message.setTargets([]);
-        message.message = "";
+        // message.sendToTargets = true;
+        //message.setTargets([]);
+        //message.message = "";
+
         return sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f The command §7${config.customcommands.prefix}${commandName}§f does not exist. Try again!`);
     }
 
     // Do not broadcast any message to any targets
-    message.sendToTargets = true;
+    // message.sendToTargets = true;
 }
 
 export function handleCommandAfterSend(chatSendAfterEvent: ChatSendAfterEvent): void {
@@ -215,7 +216,7 @@ export function handleCommandAfterSend(chatSendAfterEvent: ChatSendAfterEvent): 
     if (!chatSendAfterEvent.message.startsWith(config.customcommands.prefix)) return;
 
     // Do not broadcast any message to any targets
-    chatSendAfterEvent.sendToTargets = true;
+    // chatSendAfterEvent.sendToTargets = true;
 
     const args = chatSendAfterEvent.message.slice(config.customcommands.prefix.length).split(/ +/);
 
@@ -223,5 +224,5 @@ export function handleCommandAfterSend(chatSendAfterEvent: ChatSendAfterEvent): 
 
     commandDefinitions[commandName](chatSendAfterEvent, args, chatSendAfterEvent.message.slice(config.customcommands.prefix.length + commandName.length + 1));
 
-    chatSendAfterEvent.message = "";
+    //chatSendAfterEvent.message = "";
 }

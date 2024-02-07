@@ -1,4 +1,4 @@
-import { world, ItemStack, Player, EntityInventoryComponent, system, ItemEnchantsComponent, EnchantmentList, Enchantment, PlayerLeaveAfterEvent } from "@minecraft/server";
+/*import { world, ItemStack, Player, EntityInventoryComponent, system, ItemEnchantsComponent, EnchantmentList, Enchantment, PlayerLeaveAfterEvent } from "@minecraft/server";
 import config from "../../../data/config.js";
 import { illegalitems } from "../../../data/itemban.js";
 import { kickablePlayers } from "../../../kickcheck.js";
@@ -315,9 +315,11 @@ function resetMaps() {
  * to cancel the execution of this scheduled run
  * if needed to do so.
  */
+/*
 export function IllegalItemsA() {
     world.afterEvents.playerLeave.subscribe(onPlayerLogout);
     const illegalItemsAId = system.runInterval(() => {
         illegalitemsa(illegalItemsAId);
     }, 20);
 }
+*/

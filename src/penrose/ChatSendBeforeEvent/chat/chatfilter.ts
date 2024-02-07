@@ -1,3 +1,4 @@
+/* Broken in 1.20.60 Mojang made both chat events read-only
 import { world } from "@minecraft/server";
 import { sendMsgToPlayer } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
@@ -44,3 +45,4 @@ const beforeChatFilter = () => {
 };
 
 export { beforeChatFilter };
+*/

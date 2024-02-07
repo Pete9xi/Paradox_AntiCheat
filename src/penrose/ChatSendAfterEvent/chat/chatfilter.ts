@@ -1,3 +1,4 @@
+/* Broken in 1.20.60 Mojang made both chat events read-only no way around this.
 import { world } from "@minecraft/server";
 import { sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
@@ -93,3 +94,4 @@ const afterChatFilter = () => {
 };
 
 export { afterChatFilter };
+*/

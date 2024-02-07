@@ -87,7 +87,8 @@ function beforeantispam(msg: ChatSendBeforeEvent) {
                 const randomWarningMessage = getRandomWarningMessage();
                 sendMsgToPlayer(player, `§f§4[§6Paradox§4]§f ${randomWarningMessage}`);
             }
-            msg.sendToTargets = true;
+            // Broken in 1.20.60 Mojang made both chat events read-only no way around this.
+            // msg.sendToTargets = true;
             chatRecord.offense++;
             chatRecord.lastOffenseTime = now;
         }
@@ -98,10 +99,12 @@ function beforeantispam(msg: ChatSendBeforeEvent) {
         chatRecords.set(player.id, chatRecord);
 
         if (chatRecord.offense >= offenseCount) {
-            msg.sendToTargets = true;
+            // Broken in 1.20.60 Mojang made both chat events read-only no way around this.
+            //msg.sendToTargets = true;
             chatRecords.delete(player.id);
             // Add tag information to the message
-            msg.message = `;tag:${player.name},Reason:Spamming,By:Paradox,isBanned`;
+            // Broken in 1.20.60 Mojang made both chat events read-only no way around this.
+            //msg.message = `;tag:${player.name},Reason:Spamming,By:Paradox,isBanned`;
         } else if (chatRecord.offense > 0 && now - chatRecord.lastOffenseTime >= strikeReset) {
             chatRecord.offense--;
             chatRecord.lastOffenseTime = now;

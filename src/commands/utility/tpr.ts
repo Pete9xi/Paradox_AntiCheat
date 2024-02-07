@@ -109,7 +109,7 @@ function teleportRequestApprovalHandler(object: ChatSendAfterEvent) {
 
     const player = sender;
 
-    object.sendToTargets = true;
+    object.targets;
 
     // Target is the player with the request and player is the same target responding to the request
     const requestIndex = teleportRequests.findIndex((r) => r.target === player);

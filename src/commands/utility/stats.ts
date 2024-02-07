@@ -1,4 +1,4 @@
-import { ChatSendAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantsComponent, ItemStack, Player, world } from "@minecraft/server";
+import { ChatSendAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, ItemStack, Player, world } from "@minecraft/server";
 import { MinecraftEnchantmentTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
 import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
@@ -162,18 +162,25 @@ async function handleStats(message: ChatSendAfterEvent, args: string[]) {
         if (!(verification instanceof ItemStack)) {
             continue;
         }
-        const enchantedEquipment = verification.getComponent("enchantments") as ItemEnchantsComponent;
-        const enchantList = enchantedEquipment.enchantments;
-        if (!enchantList) {
+        const enchantedEquipment = verification.getComponent("enchantable") as ItemEnchantableComponent;
+        const enchantList = enchantedEquipment.getEnchantments(); // Call the function to get the array
+
+        if (!enchantList || enchantList.length === 0) {
             continue;
         }
+
         let isEnchanted = false;
+
         for (const enchant in MinecraftEnchantmentTypes) {
-            const enchantNumber = enchantList.hasEnchantment(MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes]);
-            if (enchantNumber > 0) {
+            const enchantType = MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes];
+
+            // Use some() to check if any enchantment of a specific type exists
+            if (enchantList.some((enchantment) => enchantment.type === enchantType)) {
                 isEnchanted = true;
+                break; // No need to check further if any enchantment is found
             }
         }
+
         let materialType = verification.typeId.split(":")[1].replace(/_\w+/, "");
         if (armorType === "Mainhand" || armorType === "Offhand") {
             materialType = verification.typeId.split(":")[1];

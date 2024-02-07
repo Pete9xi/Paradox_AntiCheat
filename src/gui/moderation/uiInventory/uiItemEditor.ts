@@ -1,4 +1,4 @@
-import { EntityInventoryComponent, Player, world, ItemStack, Enchantment, ItemEnchantsComponent, ItemDurabilityComponent } from "@minecraft/server";
+import { EntityInventoryComponent, Player, world, ItemStack, ItemDurabilityComponent, EnchantmentTypes } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
 import { sendMsgToPlayer } from "../../../util";
 import { uiInvEditorMenu } from "./uiInvEditorMainMenu";
@@ -112,8 +112,9 @@ export function uiItemEditorEnchantments(InvEditorUIResult: ModalFormResponse, p
         //Are we adding enchantments?
         if (enchantToggle == true) {
             if (item) {
-                const enchantmentsComponent = item.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
-                const enchantmentList = enchantmentsComponent.enchantments;
+                /*
+                const enchantmentsComponent = item.getComponent("minecraft:enchantable") as ItemEnchantableComponent;
+                const enchantmentList = enchantmentsComponent.getEnchantments();
 
                 const addedCustomEnchantment = enchantmentList.addEnchantment(new Enchantment(txtEnchant.toString(), parseInt(txtEnchantValue.toString())));
                 enchantmentsComponent.enchantments = enchantmentList;
@@ -121,14 +122,25 @@ export function uiItemEditorEnchantments(InvEditorUIResult: ModalFormResponse, p
                 if (!addedCustomEnchantment) {
                     sendMsgToPlayer(player, "§fUnable to enchant: §7" + item.typeId + "§f Enchantment to be applied: §7" + txtEnchant + "§f, §7" + txtEnchantValue);
                 }
+                */
+
+                let enchantToADD = EnchantmentTypes.get(txtEnchant.toString());
+                if (item.getComponent("enchantable").canAddEnchantment({ type: enchantToADD, level: parseInt(txtEnchantValue.toString()) })) {
+                    item.getComponent("enchantable").addEnchantment({ type: enchantToADD, level: parseInt(txtEnchantValue.toString()) });
+                    container.setItem(itemSlot, item);
+                } else {
+                    sendMsgToPlayer(player, "§fUnable to enchant: §7" + item.typeId + "§f Enchantment to be applied: §7" + txtEnchant + "§f, §7" + txtEnchantValue);
+                }
             }
         }
         if (removeEnchantToggle == true) {
             //Are we removing enchantments?
-            const enchantmentsComponent = item.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
+            /*const enchantmentsComponent = item.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
             const enchantmentList = enchantmentsComponent.enchantments;
             enchantmentList.removeEnchantment(txtRemovEnchant.toString());
             enchantmentsComponent.enchantments = enchantmentList;
+            */
+            item.getComponent("enchantable").removeEnchantment(txtRemovEnchant.toString());
             container.setItem(itemSlot, item);
         }
         // Present the Main Menu screen again.

@@ -4,7 +4,7 @@ import { SpammerA } from "./penrose/ChatSendBeforeEvent/spammer/spammer_a.js";
 import { SpammerB } from "./penrose/ChatSendBeforeEvent/spammer/spammer_b.js";
 import { SpammerC } from "./penrose/ChatSendBeforeEvent/spammer/spammer_c.js";
 import { BeforePrefixCommand } from "./penrose/ChatSendBeforeEvent/chat/beforeprefixcommand.js";
-import { beforeChatFilter } from "./penrose/ChatSendBeforeEvent/chat/chatfilter.js";
+//import { beforeChatFilter } from "./penrose/ChatSendBeforeEvent/chat/chatfilter.js";
 import { beforeAntiSpam } from "./penrose/ChatSendBeforeEvent/chat/antispam.js";
 // Import Tick Events
 import { ServerBan } from "./penrose/TickEvent/ban/serverban.js";
@@ -13,7 +13,7 @@ import { NamespoofB } from "./penrose/TickEvent/namespoof/namespoof_b.js";
 import { BedrockValidate } from "./penrose/TickEvent/bedrock/bedrockvalidate.js";
 import { JesusA } from "./penrose/TickEvent/jesus/jesus_a.js";
 import { SpeedA } from "./penrose/TickEvent/speed/speed_a.js";
-import { IllegalItemsA } from "./penrose/TickEvent/illegalitems/illegalitems_a.js";
+//import { IllegalItemsA } from "./penrose/TickEvent/illegalitems/illegalitems_a.js";
 import { InvalidSprintA } from "./penrose/TickEvent/invalidsprint/invalidsprint_a.js";
 import { FlyA } from "./penrose/TickEvent/fly/fly_a.js";
 import { AntiKnockbackA } from "./penrose/TickEvent/knockback/antikb_a.js";
@@ -46,7 +46,7 @@ import { hashCode } from "./penrose/PlayerSpawnAfterEvent/hash/hash.js";
 import { onJoinrules } from "./gui/PlayerSpawnAfterEvent/rules/rules.js";
 // Import PlayerBlockPlaceAfter Events
 import { ScaffoldA } from "./penrose/PlayerPlaceBlockAfterEvent/scaffold/scaffold_a.js";
-import { IllegalItemsB } from "./penrose/PlayerPlaceBlockAfterEvent/illegalitems/illegalitems_b.js";
+//import { IllegalItemsB } from "./penrose/PlayerPlaceBlockAfterEvent/illegalitems/illegalitems_b.js";
 // Import PlayerBlockPlaceAfter Events
 import { BeforeReachA } from "./penrose/PlayerPlaceBlockBeforeEvent/reach/reach_a.js";
 // Import EntityHitEntityAfter Events
@@ -61,7 +61,7 @@ import { WatchDog } from "./penrose/SystemEvent/watchdog.js";
 import { AfterPrefixCommand } from "./penrose/ChatSendAfterEvent/chat/afterprefixcommand.js";
 import { TpRequestListener } from "./commands/utility/tpr.js";
 import { afterAntiSpam } from "./penrose/ChatSendAfterEvent/chat/antispam.js";
-import { afterChatFilter } from "./penrose/ChatSendAfterEvent/chat/chatfilter.js";
+//import { afterChatFilter } from "./penrose/ChatSendAfterEvent/chat/chatfilter.js";
 // Import EntityDieAfter Events
 import { DeathCoordinates } from "./penrose/EntityDieAfterEvent/death_coordinates.js";
 // Import PlayerLeaveAfter Events
@@ -79,13 +79,13 @@ SpammerB();
 SpammerC();
 beforeAntiSpam();
 BeforePrefixCommand();
-beforeChatFilter();
+//beforeChatFilter();
 
 // ChatSendAfter Events
 AfterPrefixCommand();
 TpRequestListener();
 afterAntiSpam();
-afterChatFilter();
+//afterChatFilter();
 
 // Tick Events
 ClearLag();
@@ -106,7 +106,7 @@ NamespoofB();
 BedrockValidate();
 JesusA();
 SpeedA();
-IllegalItemsA();
+//IllegalItemsA();
 InvalidSprintA();
 FlyA();
 AntiKnockbackA();
@@ -135,7 +135,7 @@ onJoinrules(); // GUI
 
 // PlayerBlockPlaceAfter Events
 ScaffoldA();
-IllegalItemsB();
+//IllegalItemsB();
 
 // PlayerBlockPlaceBefore Events
 BeforeReachA();

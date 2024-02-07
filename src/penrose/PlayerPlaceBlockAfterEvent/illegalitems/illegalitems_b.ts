@@ -1,4 +1,4 @@
-import { world, ItemStack, Enchantment, Player, Block, PlayerPlaceBlockAfterEvent, BlockInventoryComponent, ItemEnchantsComponent, EnchantmentList, PlayerLeaveAfterEvent } from "@minecraft/server";
+/*import { world, ItemStack, Enchantment, Player, Block, PlayerPlaceBlockAfterEvent, BlockInventoryComponent, ItemEnchantsComponent, EnchantmentList, PlayerLeaveAfterEvent } from "@minecraft/server";
 import { illegalitems } from "../../../data/itemban.js";
 import config from "../../../data/config.js";
 import { flag, sendMsgToPlayer, sendMsg } from "../../../util.js";
@@ -379,3 +379,4 @@ const IllegalItemsB = () => {
 };
 
 export { IllegalItemsB };
+*/

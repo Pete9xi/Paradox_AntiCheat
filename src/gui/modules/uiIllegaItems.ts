@@ -1,7 +1,7 @@
 import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
-import { IllegalItemsB } from "../../penrose/PlayerPlaceBlockAfterEvent/illegalitems/illegalitems_b.js";
-import { IllegalItemsA } from "../../penrose/TickEvent/illegalitems/illegalitems_a.js";
+//import { IllegalItemsB } from "../../penrose/PlayerPlaceBlockAfterEvent/illegalitems/illegalitems_b.js";
+//import { IllegalItemsA } from "../../penrose/TickEvent/illegalitems/illegalitems_a.js";
 import { IllegalItemsC } from "../../penrose/TickEvent/illegalitems/illegalitems_c.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util";
@@ -34,7 +34,7 @@ export function uiILLEGALITEMS(illegalitemsResult: ModalFormResponse, player: Pl
         dynamicPropertyRegistry.set("illegalitemsa_b", true);
         world.setDynamicProperty("illegalitemsa_b", true);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has enabled §6IllegalItemsA§f!`);
-        IllegalItemsA();
+        // IllegalItemsA();
     }
     if (IllegalItemsAToggle === false && illegalItemsABoolean === true) {
         dynamicPropertyRegistry.set("illegalitemsa_b", false);
@@ -46,7 +46,7 @@ export function uiILLEGALITEMS(illegalitemsResult: ModalFormResponse, player: Pl
         dynamicPropertyRegistry.set("illegalitemsb_b", true);
         world.setDynamicProperty("illegalitemsb_b", true);
         sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${player.name}§f has enabled §6IllegalItemsB§f!`);
-        IllegalItemsB();
+        //IllegalItemsB();
     }
     if (IllegalItemsBToggle === false && illegalItemsBBoolean === true) {
         // Deny

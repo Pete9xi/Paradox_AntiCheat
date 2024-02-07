@@ -1,4 +1,4 @@
-import { world, EntityQueryOptions, GameMode, system, Vector3, PlayerLeaveAfterEvent, Player, EntityEquippableComponent, EquipmentSlot, ItemEnchantsComponent, Enchantment } from "@minecraft/server";
+import { world, EntityQueryOptions, GameMode, system, Vector3, PlayerLeaveAfterEvent, Player, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, Enchantment } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
@@ -157,14 +157,14 @@ function flya(id: number) {
         const equipment = player.getComponent("equippable") as EntityEquippableComponent;
         const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
         if (mainhand && mainhand.typeId === "minecraft:trident") {
-            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantments") as ItemEnchantsComponent;
-            const enchantmentList = enchantmentsComponent.enchantments;
+            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantable") as ItemEnchantableComponent;
+            const enchantmentList = enchantmentsComponent.getEnchantments();
             const iterator = enchantmentList[Symbol.iterator]();
             let iteratorResult = iterator.next();
             let targetEnchant = false;
             while (!iteratorResult.done) {
                 const enchantment: Enchantment = iteratorResult.value;
-                if (enchantment.type.id === "riptide") {
+                if (enchantment.type === "riptide") {
                     targetEnchant = true;
                 }
                 iteratorResult = iterator.next();

@@ -1,4 +1,4 @@
-import { ChatSendAfterEvent, EntityInventoryComponent, ItemEnchantsComponent, Player, world } from "@minecraft/server";
+import { ChatSendAfterEvent, EntityInventoryComponent, ItemEnchantableComponent, Player, world } from "@minecraft/server";
 
 import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
@@ -85,12 +85,12 @@ export function invsee(message: ChatSendAfterEvent, args: string[]) {
             let enchantmentInfo = "";
             const item = container.getItem(i);
             if (item) {
-                const enchantmentComponent = item.getComponent("enchantments") as ItemEnchantsComponent;
+                const enchantmentComponent = item.getComponent("enchantable") as ItemEnchantableComponent;
                 if (enchantmentComponent) {
-                    const enchantmentList = enchantmentComponent ? Array.from(enchantmentComponent.enchantments) : [];
+                    const enchantmentList = enchantmentComponent.getEnchantments();
 
                     if (enchantmentList.length > 0) {
-                        const enchantmentNames = enchantmentList.map((enchantment) => `        §6- §4[§f${enchantment.type.id}§4]§f §6Level: §4${enchantment.level}`);
+                        const enchantmentNames = enchantmentList.map((enchantment) => `        §6- §4[§f${enchantment.type}§4]§f §6Level: §4${enchantment.level}`);
                         enchantmentInfo = `\n    §4[§6Enchantments§4]§6:\n${enchantmentNames.join("\n")}`;
                     }
                     if (enchantmentInfo) {
