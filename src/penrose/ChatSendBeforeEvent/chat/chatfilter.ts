@@ -49,7 +49,7 @@ const beforeChatFilter = () => {
             });
         }
         //Vanilla chat
-        if (channelName === null) {
+        if (channelName === null && chatRanksBoolean === false) {
             player.sendMessage(`§f<${player.name}> §r${message}`);
         }
     });
