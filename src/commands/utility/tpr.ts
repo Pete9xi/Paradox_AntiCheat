@@ -1,4 +1,4 @@
-import { ChatSendAfterEvent, Player, world } from "@minecraft/server";
+import { ChatSendAfterEvent, Player, world, system } from "@minecraft/server";
 import config from "../../data/config";
 import { getPrefix, sendMsgToPlayer, setTimer } from "../../util";
 import { WorldExtended } from "../../classes/WorldExtended/World";
@@ -96,10 +96,9 @@ function teleportRequestHandler({ sender, message }: ChatSendAfterEvent) {
 function teleportRequestApprovalHandler(object: ChatSendAfterEvent) {
     const { sender, message } = object;
 
-    const lowercaseMessage = (world as WorldExtended).decryptString(message, sender.id).toLowerCase();
+    const lowercaseMessage = message.toLowerCase();
     // Extract the response from the decrypted string
-    const refChar = lowercaseMessage.split("§r");
-    const extractedPhrase = refChar[1];
+    const extractedPhrase = lowercaseMessage;
     const isApprovalRequest = extractedPhrase === "approved" || extractedPhrase === "approve";
     const isDenialRequest = extractedPhrase === "denied" || extractedPhrase === "deny";
 
@@ -126,8 +125,10 @@ function teleportRequestApprovalHandler(object: ChatSendAfterEvent) {
 
     if (isApprovalRequest) {
         setTimer(request.requester.id);
-        request.requester.teleport(request.target.location, { dimension: request.target.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
-        sendMsgToPlayer(request.requester, `§f§4[§6Paradox§4]§f Teleport request to §7${request.target.name}§f is approved.`);
+        system.run(() => {
+            request.requester.teleport(request.target.location, { dimension: request.target.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
+            sendMsgToPlayer(request.requester, `§f§4[§6Paradox§4]§f Teleport request to §7${request.target.name}§f is approved.`);
+        });
     } else {
         sendMsgToPlayer(request.requester, `§f§4[§6Paradox§4]§f Teleport request to §7${request.target.name}§f is denied.`);
     }
@@ -183,7 +184,7 @@ const TpRequestListener = () => {
     // If TPR is not disabled
     const validate = config.customcommands.tpr;
     if (validate) {
-        world.afterEvents.chatSend.subscribe(teleportRequestApprovalHandler);
+        world.beforeEvents.chatSend.subscribe(teleportRequestApprovalHandler);
     }
 };
 
