@@ -4,7 +4,7 @@ import { SpammerA } from "./penrose/ChatSendBeforeEvent/spammer/spammer_a.js";
 import { SpammerB } from "./penrose/ChatSendBeforeEvent/spammer/spammer_b.js";
 import { SpammerC } from "./penrose/ChatSendBeforeEvent/spammer/spammer_c.js";
 import { BeforePrefixCommand } from "./penrose/ChatSendBeforeEvent/chat/beforeprefixcommand.js";
-//import { beforeChatFilter } from "./penrose/ChatSendBeforeEvent/chat/chatfilter.js";
+import { beforeChatFilter } from "./penrose/ChatSendBeforeEvent/chat/chatfilter.js";
 import { beforeAntiSpam } from "./penrose/ChatSendBeforeEvent/chat/antispam.js";
 // Import Tick Events
 import { ServerBan } from "./penrose/TickEvent/ban/serverban.js";
@@ -58,7 +58,7 @@ import { Registry } from "./penrose/WorldInitializeAfterEvent/registry.js";
 // Import SystemBefore Events
 import { WatchDog } from "./penrose/SystemEvent/watchdog.js";
 // Import ChatSendAfter Events
-import { AfterPrefixCommand } from "./penrose/ChatSendAfterEvent/chat/afterprefixcommand.js";
+//import { AfterPrefixCommand } from "./penrose/ChatSendAfterEvent/chat/afterprefixcommand.js";
 import { TpRequestListener } from "./commands/utility/tpr.js";
 import { afterAntiSpam } from "./penrose/ChatSendAfterEvent/chat/antispam.js";
 //import { afterChatFilter } from "./penrose/ChatSendAfterEvent/chat/chatfilter.js";
@@ -79,10 +79,10 @@ SpammerB();
 SpammerC();
 beforeAntiSpam();
 BeforePrefixCommand();
-//beforeChatFilter();
+beforeChatFilter();
 
 // ChatSendAfter Events
-AfterPrefixCommand();
+//AfterPrefixCommand();
 TpRequestListener();
 afterAntiSpam();
 //afterChatFilter();

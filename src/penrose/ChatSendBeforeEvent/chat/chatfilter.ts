@@ -1,9 +1,8 @@
-/* Broken in 1.20.60 Mojang made both chat events read-only
-import { world } from "@minecraft/server";
+// Broken in 1.20.60 Mojang made both chat events read-only
+import { world, system } from "@minecraft/server";
 import { sendMsgToPlayer } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { ChatChannelManager } from "../../../classes/ChatChannelManager.js";
-import { WorldExtended } from "../../../classes/WorldExtended/World.js";
 
 const beforeChatFilter = () => {
     // Subscribe to the 'beforeChat' event
@@ -21,9 +20,13 @@ const beforeChatFilter = () => {
         const chatRanksBoolean = dynamicPropertyRegistry.get("chatranks_b");
         // Get the channel name associated with the player
         const channelName = ChatChannelManager.getPlayerChannel(player.id);
+        if (message.startsWith("!")) {
+            msg.cancel = true; // Cancel the chat message
+            return;
+        }
 
         // Check if chat ranks are enabled
-        if (!msg.sendToTargets && chatRanksBoolean === true) {
+        if (chatRanksBoolean === true) {
             // Get the player's tags and find their rank
             const tags = player.getTags();
             const rankTag = tags.find((tag) => tag.startsWith("Rank:")) || "Rank:§4[§6Member§4]";
@@ -32,17 +35,20 @@ const beforeChatFilter = () => {
             // Format the chat message with the rank
             const formattedMessage = `${rank} §7${player.name}: §r${message}`;
             // Encrypt and update the message
-            msg.message = (world as WorldExtended).encryptString(channelName ? `§4[§6${channelName}§4] §7${player.name}: §r${message}` : formattedMessage, player.id);
-            msg.sendToTargets = true; // Send the message to targets
-        } else if (!msg.sendToTargets && channelName) {
+            let msgToSend = channelName ? `§4[§6${channelName}§4] §7${player.name}: §r${message}` : formattedMessage;
+            system.run(() => {
+                player.sendMessage(msgToSend);
+            });
+        } else if (channelName) {
             // Format the chat message for channel
             const formattedMessage = `§4[§6${channelName}§4] §f<${player.name}> §r${message}`;
             // Encrypt and update the message
-            msg.message = (world as WorldExtended).encryptString(formattedMessage, player.id);
-            msg.sendToTargets = true; // Send the message to targets
+            let msgToSendViaChannel = formattedMessage;
+            system.run(() => {
+                player.sendMessage(msgToSendViaChannel);
+            });
         }
     });
 };
 
 export { beforeChatFilter };
-*/
