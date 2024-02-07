@@ -145,26 +145,9 @@ async function handleFullReport(message: ChatSendAfterEvent, args: string[]) {
             if (!(verification instanceof ItemStack)) {
                 continue;
             }
-
-            const enchantedEquipment = verification.getComponent("enchantable") as ItemEnchantableComponent;
-            const enchantList = enchantedEquipment.getEnchantments(); // Call the function to get the array
-
-            if (!enchantList || enchantList.length === 0) {
-                continue;
-            }
-
+            const enchantedEquipment = verification.getComponent("enchantable");
             let isEnchanted = false;
-
-            for (const enchant in MinecraftEnchantmentTypes) {
-                const enchantType = MinecraftEnchantmentTypes[enchant as keyof typeof MinecraftEnchantmentTypes];
-
-                // Use some() to check if any enchantment of a specific type exists
-                if (enchantList.some((enchantment) => enchantment.type === enchantType)) {
-                    isEnchanted = true;
-                    break; // No need to check further if any enchantment is found
-                }
-            }
-
+            if (enchantedEquipment) isEnchanted = true;
             let materialType = verification.typeId.split(":")[1].replace(/_\w+/, "");
             if (armorType === "Mainhand" || armorType === "Offhand") {
                 materialType = verification.typeId.split(":")[1];
