@@ -1,6 +1,7 @@
-import { ChatSendBeforeEvent, PlayerLeaveAfterEvent, world } from "@minecraft/server";
+import { ChatSendBeforeEvent, PlayerLeaveAfterEvent, system, world } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { sendMsgToPlayer } from "../../../util.js";
+import { kickablePlayers } from "../../../kickcheck.js";
 
 let antiSpamBoolean: boolean = dynamicPropertyRegistry.get("antispam_b") as boolean; // Initialize
 
@@ -105,6 +106,18 @@ function beforeantispam(msg: ChatSendBeforeEvent) {
             // Add tag information to the message
             // Broken in 1.20.60 Mojang made both chat events read-only no way around this.
             //msg.message = `;tag:${player.name},Reason:Spamming,By:Paradox,isBanned`;
+
+            system.run(() => {
+                try {
+                    player.addTag(`Reason:Spamming`);
+                    player.addTag(`By:Paradox`);
+                    player.addTag(`isBanned`);
+                } catch {
+                    kickablePlayers.add(player);
+
+                    player.triggerEvent("paradox:kick");
+                }
+            });
         } else if (chatRecord.offense > 0 && now - chatRecord.lastOffenseTime >= strikeReset) {
             chatRecord.offense--;
             chatRecord.lastOffenseTime = now;
