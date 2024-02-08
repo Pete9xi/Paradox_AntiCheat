@@ -1,5 +1,4 @@
-import { EntityEquippableComponent, EquipmentSlot, ItemStack, Player, world, ItemEnchantableComponent } from "@minecraft/server";
-import { MinecraftEnchantmentTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import { EntityEquippableComponent, EquipmentSlot, ItemStack, Player, world } from "@minecraft/server";
 import { ActionFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsgToPlayer } from "../../util";

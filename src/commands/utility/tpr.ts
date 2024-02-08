@@ -1,7 +1,6 @@
 import { ChatSendAfterEvent, Player, world, system } from "@minecraft/server";
 import config from "../../data/config";
 import { getPrefix, sendMsgToPlayer, setTimer } from "../../util";
-import { WorldExtended } from "../../classes/WorldExtended/World";
 
 interface TeleportRequest {
     requester: Player;

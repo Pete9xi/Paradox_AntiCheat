@@ -1,5 +1,4 @@
-import { ChatSendAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, ItemStack, Player, world } from "@minecraft/server";
-import { MinecraftEnchantmentTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
+import { ChatSendAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemStack, Player, world } from "@minecraft/server";
 import config from "../../data/config.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { getPrefix, sendMsgToPlayer } from "../../util.js";
