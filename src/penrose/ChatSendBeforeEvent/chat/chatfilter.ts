@@ -37,7 +37,7 @@ const beforeChatFilter = () => {
             // Encrypt and update the message
             let msgToSend = channelName ? `§4[§6${channelName}§4] §7${player.name}: §r${message}` : formattedMessage;
             system.run(() => {
-                player.sendMessage(msgToSend);
+                world.sendMessage(msgToSend);
             });
         } else if (channelName) {
             // Format the chat message for channel
@@ -45,12 +45,12 @@ const beforeChatFilter = () => {
             // Encrypt and update the message
             let msgToSendViaChannel = formattedMessage;
             system.run(() => {
-                player.sendMessage(msgToSendViaChannel);
+                world.sendMessage(msgToSendViaChannel);
             });
         }
         //Vanilla chat
         if (channelName === null && chatRanksBoolean === false) {
-            player.sendMessage(`§f<${player.name}> §r${message}`);
+            world.sendMessage(`§f<${player.name}> §r${message}`);
         }
     });
 };
