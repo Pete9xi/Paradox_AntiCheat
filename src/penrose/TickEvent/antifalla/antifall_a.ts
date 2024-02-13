@@ -1,7 +1,7 @@
 import { world, EntityQueryOptions, GameMode, system, Block, EntityEquippableComponent, EquipmentSlot, Enchantment, ItemComponentTypes } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
+import { MinecraftEffectTypes, MinecraftEnchantmentTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
 
 function antifalla(id: number) {
     // Get Dynamic Property
@@ -58,20 +58,8 @@ function antifalla(id: number) {
         const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
         if (mainhand && mainhand.typeId === "minecraft:trident") {
             const enchantmentsComponent = mainhand.getComponent(ItemComponentTypes.Enchantable);
-            const enchantmentList = enchantmentsComponent.getEnchantments;
-            //@ts-ignore
-            const iterator = enchantmentList[Symbol.iterator]();
-            let iteratorResult = iterator.next();
-            let targetEnchant = false;
-            while (!iteratorResult.done) {
-                const enchantment: Enchantment = iteratorResult.value;
-                //@ts-ignore
-                if (enchantment.type.id === "riptide") {
-                    targetEnchant = true;
-                }
-                iteratorResult = iterator.next();
-            }
-            if (targetEnchant === true) {
+
+            if (enchantmentsComponent.hasEnchantment(MinecraftEnchantmentTypes.Riptide)) {
                 continue;
             }
         }
