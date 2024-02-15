@@ -1,8 +1,8 @@
-import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, Enchantment } from "@minecraft/server";
+import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, Enchantment, ItemComponentTypes } from "@minecraft/server";
 import config from "../../../data/config.js";
 import { flag, isTimerExpired } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
-
+import { MinecraftEnchantmentTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
 // Create a Map to store each player's last known position, timestamp, and highest speed
 const playerData = new Map<string, { lastPosition: number[]; lastTimestamp: number; highestBps: number; lastHitTimestamp: number }>();
 
@@ -107,20 +107,9 @@ function speeda(id: number) {
         const equipment = player.getComponent("equippable") as EntityEquippableComponent;
         const mainhand = equipment.getEquipment(EquipmentSlot.Mainhand);
         if (mainhand && mainhand.typeId === "minecraft:trident") {
-            const enchantmentsComponent = mainhand.getComponent("minecraft:enchantable") as ItemEnchantableComponent;
-            const enchantmentList = enchantmentsComponent.getEnchantments();
-            const iterator = enchantmentList[Symbol.iterator]();
-            let iteratorResult = iterator.next();
-            let targetEnchant = false;
-            while (!iteratorResult.done) {
-                const enchantment: Enchantment = iteratorResult.value;
-                //@ts-ignore
-                if (enchantment.type.id === "riptide") {
-                    targetEnchant = true;
-                }
-                iteratorResult = iterator.next();
-            }
-            if (targetEnchant === true) {
+            const enchantmentsComponent = mainhand.getComponent(ItemComponentTypes.Enchantable);
+
+            if (enchantmentsComponent.hasEnchantment(MinecraftEnchantmentTypes.Riptide)) {
                 continue;
             }
         }
