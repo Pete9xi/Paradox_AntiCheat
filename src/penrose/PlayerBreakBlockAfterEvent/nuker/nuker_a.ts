@@ -54,8 +54,12 @@ async function afternukera(
          * Oak, Spruce, Birch, Jungle, Acacia, Dark Oak,
          * Azalea, Flowering Azalea, Mangrove, Cherry.
          */
-        MinecraftBlockTypes.Leaves,
-        MinecraftBlockTypes.Leaves2,
+        MinecraftBlockTypes.OakLeaves,
+        MinecraftBlockTypes.SpruceLeaves,
+        MinecraftBlockTypes.BirchLeaves,
+        MinecraftBlockTypes.JungleLeaves,
+        MinecraftBlockTypes.AcaciaLeaves,
+        MinecraftBlockTypes.DarkOakLeaves,
         MinecraftBlockTypes.AzaleaLeaves,
         MinecraftBlockTypes.CherryLeaves,
         MinecraftBlockTypes.MangroveLeaves,

@@ -1,4 +1,4 @@
-import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, Enchantment, ItemComponentTypes } from "@minecraft/server";
+import { world, system, EntityQueryOptions, GameMode, PlayerLeaveAfterEvent, EntityHurtAfterEvent, PlayerSpawnAfterEvent, EntityEquippableComponent, EquipmentSlot, ItemComponentTypes } from "@minecraft/server";
 import config from "../../../data/config.js";
 import { flag, isTimerExpired } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";

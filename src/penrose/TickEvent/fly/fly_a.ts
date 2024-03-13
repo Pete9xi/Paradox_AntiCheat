@@ -1,4 +1,4 @@
-import { world, EntityQueryOptions, GameMode, system, Vector3, PlayerLeaveAfterEvent, Player, EntityEquippableComponent, EquipmentSlot, ItemEnchantableComponent, Enchantment, ItemComponentTypes } from "@minecraft/server";
+import { world, EntityQueryOptions, GameMode, system, Vector3, PlayerLeaveAfterEvent, Player, EntityEquippableComponent, EquipmentSlot, ItemComponentTypes } from "@minecraft/server";
 import { flag } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEnchantmentTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
