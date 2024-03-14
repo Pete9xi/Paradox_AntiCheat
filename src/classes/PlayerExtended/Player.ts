@@ -1,5 +1,6 @@
 import { GameMode, Player, world } from "@minecraft/server";
 
+// @ts-ignore
 export interface PlayerExtended extends Player {
     /**
      * Checks if the player is in the specified game mode.
@@ -10,7 +11,7 @@ export interface PlayerExtended extends Player {
 
     /**
      * Gets the game mode of the player.
-     * @returns {string | undefined} The game mode of the player as a string, or undefined if the player is not found.
+     * @returns {Enum | undefined} The game mode of the player as a string, or undefined if the player is not found.
      */
     getGameMode(): string | undefined;
 
@@ -59,14 +60,17 @@ function resetTag(player: Player): void {
 
 export function extendPlayerPrototype() {
     (Player.prototype as PlayerExtended).isGameMode = function (gamemode) {
+        // @ts-ignore
         return isPlayerInGameMode(this, gamemode);
     };
 
     (Player.prototype as PlayerExtended).getGameMode = function () {
+        // @ts-ignore
         return getGameModeForPlayer(this);
     };
 
     (Player.prototype as PlayerExtended).resetTag = function () {
+        // @ts-ignore
         return resetTag(this);
     };
 }
