@@ -1,7 +1,7 @@
 <div align="center">
   <img src="Media/Paradox_Title.png" alt="Paradox AntiCheat Logo"></img>
   <br><br>
-  <em>Updated for 1.20.30</em>
+  <em>Updated for 1.20.70</em>
   <br><br>
   Paradox AntiCheat is a fork of Scythe AntiCheat, released under the GPLv3 License. Paradox was created to address differences within Scythe and provide a more reliable and effective anti-cheat solution for Minecraft Bedrock. The original commit history related to Scythe is retained and free to review.
 </div>
