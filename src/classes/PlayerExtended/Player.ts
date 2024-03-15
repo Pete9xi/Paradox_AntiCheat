@@ -10,9 +10,9 @@ export interface PlayerExtended extends Player {
 
     /**
      * Gets the game mode of the player.
-     * @returns {string | undefined} The game mode of the player as a string, or undefined if the player is not found.
+     * @returns {GameMode | undefined} The game mode of the player as a string, or undefined if the player is not found.
      */
-    getGameMode(): string | undefined;
+    getGameMode(): GameMode | undefined;
 
     /**
      * Resets the rank tag of a player by removing any tags starting with "Rank:".
@@ -24,7 +24,7 @@ function isPlayerInGameMode(player: Player, gamemode: string): boolean {
     return world.getPlayers({ name: player.name, gameMode: gamemode as GameMode }).length > 0;
 }
 
-function getGameModeForPlayer(player: Player): string | undefined {
+function getGameModeForPlayer(player: Player): GameMode | undefined {
     const playerName = player.name;
     const gamemodeValues = Object.values(GameMode);
 
@@ -32,16 +32,7 @@ function getGameModeForPlayer(player: Player): string | undefined {
         const gameModePlayer = world.getPlayers({ name: playerName, gameMode: gamemode });
 
         if (gameModePlayer.length > 0) {
-            switch (gamemode) {
-                case GameMode.creative:
-                    return "creative";
-                case GameMode.survival:
-                    return "survival";
-                case GameMode.adventure:
-                    return "adventure";
-                case GameMode.spectator:
-                    return "spectator";
-            }
+            return gamemode;
         }
     }
 
