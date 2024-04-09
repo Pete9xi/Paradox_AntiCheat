@@ -118,6 +118,9 @@ async function main() {
         // Proceed with extraction
         await extractBDS(latestVersion, downloadLocation);
 
+        // Delete the zip archive after extraction is complete
+        deleteZipArchive(downloadLocation);
+
         copyFolders(oldVersionDir, newVersionDir);
         updateServerProperties(oldVersionDir, newVersionDir);
     } catch (error) {
@@ -314,6 +317,15 @@ function askQuestion(question) {
             resolve(answer);
         });
     });
+}
+
+function deleteZipArchive(zipPath) {
+    try {
+        fs.unlinkSync(zipPath);
+        console.log(`\n> Deleted zip archive: ${zipPath}`);
+    } catch (error) {
+        console.error(`\nFailed to delete zip archive: ${error}`);
+    }
 }
 
 main();
