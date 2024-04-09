@@ -130,7 +130,6 @@ onJoinrules(); // GUI
 
 // PlayerBlockPlaceAfter Events
 ScaffoldA();
-//IllegalItemsB();
 
 // PlayerBlockPlaceBefore Events
 BeforeReachA();
