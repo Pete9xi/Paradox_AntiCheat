@@ -1,7 +1,8 @@
-import { world, Vector3, Vector } from "@minecraft/server";
+import { world, Vector3 } from "@minecraft/server";
 import config from "../../data/config.js";
 import { extendPlayerPrototype } from "../../classes/PlayerExtended/Player.js";
 import { WorldExtended, extendWorldPrototype } from "../../classes/WorldExtended/World.js";
+import { Vector3Builder } from "@minecraft/math";
 
 export const dynamicPropertyRegistry = new Map<string, string | number | boolean | Vector3>();
 
@@ -142,8 +143,8 @@ function registry() {
     }
     const spawnProtection_V3 = world.getDynamicProperty("spawnProtection_V3");
     if (spawnProtection_V3 === undefined) {
-        world.setDynamicProperty("spawnProtection_V3", new Vector(0, 0, 0));
-        dynamicPropertyRegistry.set("spawnProtection_V3", new Vector(0, 0, 0));
+        world.setDynamicProperty("spawnProtection_V3", new Vector3Builder(0, 0, 0));
+        dynamicPropertyRegistry.set("spawnProtection_V3", new Vector3Builder(0, 0, 0));
     } else {
         dynamicPropertyRegistry.set("spawnProtection_V3", spawnProtection_V3);
     }
