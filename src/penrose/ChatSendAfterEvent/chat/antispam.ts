@@ -1,5 +1,4 @@
 import { ChatSendAfterEvent, world } from "@minecraft/server";
-import { kickablePlayers } from "../../../kickcheck";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry";
 
 function extractTagInfo(message: string) {
@@ -52,7 +51,6 @@ function afterantispam(msg: ChatSendAfterEvent) {
             player.addTag(`By:${tagInfo.by}`);
             player.addTag(tagInfo.isBanned);
         } catch {
-            kickablePlayers.add(player);
             player.triggerEvent("paradox:kick");
         }
     }

@@ -1,4 +1,4 @@
-import { world, Player, system, EntityQueryOptions, Vector } from "@minecraft/server";
+import { world, Player, system, EntityQueryOptions } from "@minecraft/server";
 import { sendMsg, setTimer } from "../../../util";
 import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index";
 import { WorldExtended } from "../../../classes/WorldExtended/World";

@@ -1,6 +1,5 @@
 import { Player, PlayerLeaveAfterEvent, world } from "@minecraft/server";
 import config from "./data/config.js";
-import { kickablePlayers } from "./kickcheck.js";
 import { ScoreManager } from "./classes/ScoreManager.js";
 import { Vector3Builder } from "@minecraft/math";
 
@@ -46,7 +45,6 @@ export function flag(player: Player, check: string, checkType: string, hackType:
     if (check === "Namespoof") {
         player.runCommandAsync(`kick "${player.name}" §f\n\n§4[§6Paradox§4]§f You have illegal characters in your name!`).catch(() => {
             // If we can't kick them with /kick, then we instantly despawn them
-            kickablePlayers.add(player);
             player.triggerEvent("paradox:kick");
         });
     }
@@ -76,13 +74,13 @@ export function banMessage(player: Player) {
         const appealLink = `\n§4[§6Appeal§4]§f: §b${config.modules.banAppeal.discordLink}`;
         player.runCommandAsync(`kick "${player.name}" §f\n§l§4YOU ARE BANNED!§r\n§4[§6Banned By§4]§f: §7${by || "§7N/A"}§f\n§4[§6Reason§4]§f: §7${reason || "§7N/A"}§f${appealLink}`).catch(() => {
             // If we can't kick them with /kick, then we instantly despawn them
-            kickablePlayers.add(player);
+
             player.triggerEvent("paradox:kick");
         });
     } else {
         player.runCommandAsync(`kick "${player.name}" §f\n§l§4YOU ARE BANNED!\n§r\n§4[§6Banned By§4]§f: §7${by || "§7N/A"}§f\n§4[§6Reason§4]§f: §7${reason || "§7N/A"}§f`).catch(() => {
             // If we can't kick them with /kick, then we instantly despawn them
-            kickablePlayers.add(player);
+
             player.triggerEvent("paradox:kick");
         });
     }

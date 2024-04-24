@@ -3,7 +3,6 @@ import { flag, sendMsg } from "../../../util.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { MinecraftBlockTypes, MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index.js";
 import config from "../../../data/config.js";
-import { kickablePlayers } from "../../../kickcheck.js";
 
 const lastBreakTime = new Map<string, number>();
 
@@ -239,7 +238,6 @@ async function afternukera(
             //Kick or Freeze?
             if (config.modules.antinukerA.kick == true) {
                 player.runCommandAsync(`kick "${player.name}" §f§4[§6Paradox§4]§f You have been kicked for nuking.`);
-                kickablePlayers.add(player);
                 player.triggerEvent("paradox:kick");
                 sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f ${player.name} has been kicked by NukerA, BlockID: ${brokenBlockPermutation.type.id}`);
             } else {
