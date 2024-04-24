@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@minecraft/vanilla-data": "^1.20.70",
+    "@minecraft/vanilla-data": "^1.20.80",
     "crypto-es": "^2.1.0"
   }
 }
