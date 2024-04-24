@@ -1,5 +1,4 @@
 import { Player, system, world } from "@minecraft/server";
-import { kickablePlayers } from "../../../kickcheck";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry";
 import config from "../../../data/config";
 import { ScoreManager } from "../../../classes/ScoreManager";
@@ -13,7 +12,6 @@ function rip(player: Player, reason: string) {
         player.addTag("isBanned");
         // Despawn if we cannot kick the player
     } catch (error) {
-        kickablePlayers.add(player);
         player.triggerEvent("paradox:kick");
     }
 }

@@ -3,7 +3,6 @@ import config from "../../data/config.js";
 import { sendMsgToPlayer } from "../../util.js";
 import { MessageFormData } from "@minecraft/server-ui";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
-import { kickablePlayers } from "../../kickcheck.js";
 
 const playersAwaitingResponse: Set<string> = new Set();
 
@@ -59,7 +58,6 @@ async function showrules(id: number) {
             if (KickOnDeclineBoolean === true) {
                 const reason = "You must agree to the rules to join.";
                 player.runCommandAsync(`kick "${player.name}" §f\n\n${reason}`).catch(() => {
-                    kickablePlayers.add(player);
                     player.triggerEvent("paradox:kick");
                 });
             }

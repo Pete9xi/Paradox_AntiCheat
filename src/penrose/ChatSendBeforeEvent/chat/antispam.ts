@@ -1,7 +1,6 @@
 import { ChatSendBeforeEvent, PlayerLeaveAfterEvent, system, world } from "@minecraft/server";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { sendMsgToPlayer } from "../../../util.js";
-import { kickablePlayers } from "../../../kickcheck.js";
 
 let antiSpamBoolean: boolean = dynamicPropertyRegistry.get("antispam_b") as boolean; // Initialize
 
@@ -113,8 +112,6 @@ function beforeantispam(msg: ChatSendBeforeEvent) {
                     player.addTag(`By:Paradox`);
                     player.addTag(`isBanned`);
                 } catch {
-                    kickablePlayers.add(player);
-
                     player.triggerEvent("paradox:kick");
                 }
             });

@@ -1,7 +1,6 @@
 import { Player, PlayerSpawnAfterEvent, world } from "@minecraft/server";
 import { onJoinPrimaryData, onJoinSecondaryData } from "../../../data/onjoindata.js";
 import { getPrefix, setTimer } from "../../../util.js";
-import { kickablePlayers } from "../../../kickcheck.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import { ScoreManager } from "../../../classes/ScoreManager.js";
 
@@ -39,7 +38,6 @@ async function onJoinTime(object: PlayerSpawnAfterEvent) {
         // Kick players from server
         player.runCommandAsync(`kick "${player.name}" §f\n\n${reason}`).catch(() => {
             // Despawn players from server
-            kickablePlayers.add(player);
             player.triggerEvent("paradox:kick");
         });
         return;

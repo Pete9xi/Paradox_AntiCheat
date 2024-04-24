@@ -1,9 +1,10 @@
-import { Player, Vector, world } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { ModalFormResponse } from "@minecraft/server-ui";
 import { SpawnProtection } from "../../penrose/TickEvent/spawnprotection/spawnProtection.js";
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util.js";
 import { paradoxui } from "../paradoxui.js";
+import { Vector3Builder } from "@minecraft/math";
 
 export function uiSpawnProtection(spawnProtectionResult: ModalFormResponse, player: Player) {
     if (!spawnProtectionResult || spawnProtectionResult.canceled) {
@@ -22,7 +23,7 @@ export function uiSpawnProtection(spawnProtectionResult: ModalFormResponse, play
         // Allow
         dynamicPropertyRegistry.set("spawnProtection_b", true);
         world.setDynamicProperty("spawnProtection_b", true);
-        const vector3 = new Vector(Number(spawnProtection_X), Number(spawnProtection_Y), Number(spawnProtection_Z));
+        const vector3 = new Vector3Builder(Number(spawnProtection_X), Number(spawnProtection_Y), Number(spawnProtection_Z));
         console.log(vector3);
         dynamicPropertyRegistry.set("spawnProtection_V3", vector3);
         world.setDynamicProperty("spawnProtection_V3", vector3);

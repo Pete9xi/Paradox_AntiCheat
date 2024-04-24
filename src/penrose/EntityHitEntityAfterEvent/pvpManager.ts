@@ -1,7 +1,6 @@
 import { world, Player, EntityHitEntityAfterEvent, ProjectileHitEntityAfterEvent, PlayerLeaveAfterEvent, EntityDieAfterEvent } from "@minecraft/server";
 import { sendMsg, sendMsgToPlayer } from "../../util.js";
 import { MinecraftEffectTypes } from "../../node_modules/@minecraft/vanilla-data/lib/index";
-import { kickablePlayers } from "../../kickcheck.js";
 
 const pvpData = new Map<string, { counter: number; lastAttackedName: string }>();
 
@@ -48,7 +47,6 @@ function pvpProjectile(event: ProjectileHitEntityAfterEvent) {
             sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f §7${source.name}§f has attacked §7${data.entity.name}§f while §7${data.entity.name}§f has PVP disabled.`);
             pvpDataForHitEntity.counter = 0;
             source.runCommandAsync(`kick "${source.name}" §f§4[§6Paradox§4]§f You engaged in pvp with a player who has disabled PVP you were warned 9 times, as a result you have been kicked.`);
-            kickablePlayers.add(source);
             source.triggerEvent("paradox:kick");
             sendMsg("@a[tag=paradoxOpped]", `§f§4[§6Paradox§4]§f ${source.name} has been kicked by pvpManager.`);
         }

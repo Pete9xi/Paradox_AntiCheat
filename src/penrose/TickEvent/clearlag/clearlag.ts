@@ -1,7 +1,6 @@
 import { world, system } from "@minecraft/server";
 import { sendMsg } from "../../../util.js";
 import { clearItems } from "../../../data/clearlag.js";
-import { kickablePlayers } from "../../../kickcheck.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import config from "../../../data/config.js";
 
@@ -36,7 +35,6 @@ function clearEntities() {
         if (entityException.includes(entity.typeId) || entity.nameTag) {
             continue;
         }
-        kickablePlayers.add(entity);
         entity.remove();
     }
 }
