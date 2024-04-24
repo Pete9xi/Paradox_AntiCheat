@@ -72,7 +72,13 @@ async function afternukera(
          * Bamboo.
          */
         MinecraftBlockTypes.BambooSapling,
-        MinecraftBlockTypes.Sapling,
+        MinecraftBlockTypes.OakSapling,
+        MinecraftBlockTypes.BirchSapling,
+        MinecraftBlockTypes.JungleSapling,
+        MinecraftBlockTypes.AcaciaSapling,
+        MinecraftBlockTypes.DarkOakSapling,
+        MinecraftBlockTypes.MangrovePropagule,
+        MinecraftBlockTypes.Bamboo,
         MinecraftBlockTypes.CherrySapling,
 
         /**
@@ -85,7 +91,13 @@ async function afternukera(
          */
         MinecraftBlockTypes.AzaleaLeavesFlowered,
         MinecraftBlockTypes.FloweringAzalea,
-        MinecraftBlockTypes.RedFlower,
+        MinecraftBlockTypes.Poppy,
+        MinecraftBlockTypes.Allium,
+        MinecraftBlockTypes.AzureBluet,
+        MinecraftBlockTypes.BlueOrchid,
+        MinecraftBlockTypes.Cornflower,
+        MinecraftBlockTypes.LilyOfTheValley,
+        MinecraftBlockTypes.OrangeTulip,
         MinecraftBlockTypes.ChorusFlower,
         MinecraftBlockTypes.YellowFlower,
         MinecraftBlockTypes.WitherRose,
