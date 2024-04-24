@@ -1,7 +1,8 @@
-import { Player, PlayerLeaveAfterEvent, Vector, world } from "@minecraft/server";
+import { Player, PlayerLeaveAfterEvent, world } from "@minecraft/server";
 import config from "./data/config.js";
 import { kickablePlayers } from "./kickcheck.js";
 import { ScoreManager } from "./classes/ScoreManager.js";
+import { Vector3Builder } from "@minecraft/math";
 
 const overworld = world.getDimension("overworld");
 const timerMap = new Map<string, number>();
@@ -29,7 +30,7 @@ world.afterEvents.playerLeave.subscribe(onPlayerLogout);
  */
 export function flag(player: Player, check: string, checkType: string, hackType: string, item: string, stack: number, debugName: string, debug: string, shouldTP: boolean) {
     if (shouldTP) {
-        player.teleport(new Vector(player.location.x, player.location.y, player.location.z), { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
+        player.teleport(new Vector3Builder(player.location.x, player.location.y, player.location.z), { dimension: player.dimension, rotation: { x: 0, y: 0 }, facingLocation: { x: 0, y: 0, z: 0 }, checkForBlocks: true, keepVelocity: false });
     }
 
     ScoreManager.setScore(player, `${check.toLowerCase()}vl`, 1, true);
