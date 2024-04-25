@@ -1,7 +1,7 @@
 import { Player, PlayerLeaveAfterEvent, world } from "@minecraft/server";
 import config from "./data/config.js";
 import { ScoreManager } from "./classes/ScoreManager.js";
-import { Vector3Builder } from "@minecraft/math";
+import { Vector3Builder } from "./node_modules/@minecraft/math";
 
 const overworld = world.getDimension("overworld");
 const timerMap = new Map<string, number>();

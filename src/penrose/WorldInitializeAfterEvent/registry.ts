@@ -2,7 +2,7 @@ import { world, Vector3 } from "@minecraft/server";
 import config from "../../data/config.js";
 import { extendPlayerPrototype } from "../../classes/PlayerExtended/Player.js";
 import { WorldExtended, extendWorldPrototype } from "../../classes/WorldExtended/World.js";
-import { Vector3Builder } from "@minecraft/math";
+import { Vector3Builder } from "../../node_modules/@minecraft/math";
 
 export const dynamicPropertyRegistry = new Map<string, string | number | boolean | Vector3>();
 

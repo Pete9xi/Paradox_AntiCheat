@@ -4,7 +4,7 @@ import { SpawnProtection } from "../../penrose/TickEvent/spawnprotection/spawnPr
 import { dynamicPropertyRegistry } from "../../penrose/WorldInitializeAfterEvent/registry.js";
 import { sendMsg, sendMsgToPlayer } from "../../util.js";
 import { paradoxui } from "../paradoxui.js";
-import { Vector3Builder } from "@minecraft/math";
+import { Vector3Builder } from "../../node_modules/@minecraft/math";
 
 export function uiSpawnProtection(spawnProtectionResult: ModalFormResponse, player: Player) {
     if (!spawnProtectionResult || spawnProtectionResult.canceled) {

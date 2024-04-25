@@ -2,7 +2,7 @@ import { world, Player, system, EntityQueryOptions } from "@minecraft/server";
 import { sendMsg, setTimer } from "../../../util";
 import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index";
 import { WorldExtended } from "../../../classes/WorldExtended/World";
-import { Vector3Builder } from "@minecraft/math";
+import { Vector3Builder } from "../../../node_modules/@minecraft/math";
 
 function freezePlayer(player: Player) {
     // Record the player's original location
