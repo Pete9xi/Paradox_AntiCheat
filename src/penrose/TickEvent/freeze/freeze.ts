@@ -2,7 +2,6 @@ import { world, Player, system, EntityQueryOptions } from "@minecraft/server";
 import { sendMsg, setTimer } from "../../../util";
 import { MinecraftEffectTypes } from "../../../node_modules/@minecraft/vanilla-data/lib/index";
 import { WorldExtended } from "../../../classes/WorldExtended/World";
-import { Vector3Builder } from "../../../node_modules/@minecraft/math";
 
 function freezePlayer(player: Player) {
     // Record the player's original location
@@ -11,13 +10,16 @@ function freezePlayer(player: Player) {
 
     setTimer(player.id);
     // Teleport the player to the freezing location
-    player.teleport(new Vector3Builder(originalLocation.x, 245, originalLocation.z), {
-        dimension: world.getDimension("overworld"),
-        rotation: player.getRotation(),
-        facingLocation: player.getViewDirection(),
-        checkForBlocks: true,
-        keepVelocity: false,
-    });
+    player.teleport(
+        { x: originalLocation.x, y: 245, z: originalLocation.z },
+        {
+            dimension: world.getDimension("overworld"),
+            rotation: player.getRotation(),
+            facingLocation: player.getViewDirection(),
+            checkForBlocks: true,
+            keepVelocity: false,
+        }
+    );
 
     // Create prison around the player
     player.runCommand(`fill ${originalLocation.x + 2} ${245 + 2} ${originalLocation.z + 2} ${originalLocation.x - 2} ${245 - 1} ${originalLocation.z - 2} barrier [] hollow`);
@@ -57,13 +59,16 @@ function unfreezePlayer(player: Player) {
 
                 setTimer(player.id);
                 // Teleport the player back to their original location
-                player.teleport(new Vector3Builder(originalX, originalY, originalZ), {
-                    dimension: world.getDimension(originalDimensionName),
-                    rotation: player.getRotation(),
-                    facingLocation: player.getViewDirection(),
-                    checkForBlocks: false,
-                    keepVelocity: false,
-                });
+                player.teleport(
+                    { x: originalX, y: originalY, z: originalZ },
+                    {
+                        dimension: world.getDimension(originalDimensionName),
+                        rotation: player.getRotation(),
+                        facingLocation: player.getViewDirection(),
+                        checkForBlocks: false,
+                        keepVelocity: false,
+                    }
+                );
             }
         }
     }
@@ -98,13 +103,16 @@ const freezePlayers = () => {
                 // Check if the player has moved and teleport if necessary
                 const { x, y, z } = player.location;
                 if (Math.floor(x) !== Math.floor(originalX as number) || Math.floor(y) !== Math.floor(originalY as number) || Math.floor(z) !== Math.floor(originalZ as number) || player.dimension.id !== originalDimension) {
-                    player.teleport(new Vector3Builder(originalX as number, originalY as number, originalZ as number), {
-                        dimension: world.getDimension(originalDimension as string),
-                        rotation: player.getRotation(),
-                        facingLocation: player.getViewDirection(),
-                        checkForBlocks: false,
-                        keepVelocity: false,
-                    });
+                    player.teleport(
+                        { x: originalX as number, y: originalY as number, z: originalZ as number },
+                        {
+                            dimension: world.getDimension(originalDimension as string),
+                            rotation: player.getRotation(),
+                            facingLocation: player.getViewDirection(),
+                            checkForBlocks: false,
+                            keepVelocity: false,
+                        }
+                    );
                 }
 
                 // Check and apply effects if not already present
