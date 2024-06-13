@@ -100,6 +100,10 @@ async function afternukera(
         MinecraftBlockTypes.ChorusFlower,
         MinecraftBlockTypes.YellowFlower,
         MinecraftBlockTypes.WitherRose,
+        MinecraftBlockTypes.Sunflower,
+        MinecraftBlockTypes.Lilac,
+        MinecraftBlockTypes.RoseBush,
+        MinecraftBlockTypes.Peony,
 
         /**
          * Mushrooms
@@ -156,8 +160,7 @@ async function afternukera(
          * Lily Pad, Tall Grass, Vines
          */
         MinecraftBlockTypes.Azalea,
-        MinecraftBlockTypes.DoublePlant,
-        MinecraftBlockTypes.Tallgrass,
+        MinecraftBlockTypes.TallGrass,
         MinecraftBlockTypes.Deadbush,
         MinecraftBlockTypes.Vine,
         MinecraftBlockTypes.TwistingVines,
@@ -215,7 +218,7 @@ async function afternukera(
     const lastBreakInSeconds = lastBreakTime.get(player.id) ? (beforeLastBreakTime - lastBreakTime.get(player.id)) / 1000 : undefined; // Use beforeLastBreakTime if lastBreakTime is not available
     const counter = breakCount || 0;
 
-    const hand = player.selectedSlot;
+    const hand = player.selectedSlotIndex;
     const inventory = player.getComponent("inventory") as EntityInventoryComponent;
     const container = inventory.container;
     const item = container.getItem(hand);
@@ -228,7 +231,7 @@ async function afternukera(
     if (!vegetation.includes(brokenBlockPermutation.type.id as MinecraftBlockTypes) && lastBreakInSeconds && lastBreakInSeconds < requiredTimeDifference) {
         if (counter >= 5) {
             const blockLoc = dimension.getBlock({ x: x, y: y, z: z });
-            const blockID = brokenBlockPermutation.clone();
+            const blockID = brokenBlockPermutation;
 
             flag(player, "Nuker", "A", "Break", null, null, null, null, false);
             blockLoc.setPermutation(blockID);
