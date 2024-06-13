@@ -19,7 +19,7 @@ async function antiknockbacka(id: number) {
             continue;
         }
 
-        const hand = player.selectedSlot;
+        const hand = player.selectedSlotIndex;
 
         const invContainer = player.getComponent("inventory") as EntityInventoryComponent;
         const inventory = invContainer.container;
