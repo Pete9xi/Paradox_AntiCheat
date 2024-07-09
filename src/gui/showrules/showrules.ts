@@ -26,11 +26,7 @@ async function showrules(id: number) {
 
     const filter = new Object() as EntityQueryOptions;
     filter.tags = ["ShowRulesOnJoin"];
-
-    const [cfgrule1, cfgrule2, cfgrule3, cfgrule4, cfgrule5] = [config.modules.showrules.rule1, config.modules.showrules.rule2, config.modules.showrules.rule3, config.modules.showrules.rule4, config.modules.showrules.rule5];
-
-    const CompleteRules = `${cfgrule1}\n${cfgrule2}\n${cfgrule3}\n${cfgrule4}\n${cfgrule5}`;
-
+    const CompleteRules = config.modules.showrules.rulesArray.join("\n\n");
     const players = world.getPlayers(filter);
     const promises = players.map(async (player) => {
         if (!playersAwaitingResponse.has(player.id)) {
