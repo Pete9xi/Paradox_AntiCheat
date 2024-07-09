@@ -40,7 +40,7 @@ function worldborder(id: number) {
     const worldBorderOverworldNumber = dynamicPropertyRegistry.get("worldborder_n");
     const worldBorderNetherNumber = dynamicPropertyRegistry.get("worldborder_nether_n");
     const worldBorderEndNumber = dynamicPropertyRegistry.get("worldborder_end_n");
-
+    world.getDefaultSpawnLocation();
     // Unsubscribe if disabled in-game
     if (worldBorderBoolean === false) {
         system.clearRun(id);
