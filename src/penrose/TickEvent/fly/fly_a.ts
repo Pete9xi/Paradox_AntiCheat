@@ -20,9 +20,9 @@ function getRandomOffset(): number {
 }
 function flya(id: number) {
     // Get Dynamic Property
-    const flyBBoolean = dynamicPropertyRegistry.get("flyb_b");
+    const flyABoolean = dynamicPropertyRegistry.get("flya_b");
     // Unsubscribe if disabled in-game
-    if (flyBBoolean === false) {
+    if (flyABoolean === false) {
         system.clearRun(id);
         return;
     }
