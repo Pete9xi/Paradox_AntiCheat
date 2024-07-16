@@ -64,6 +64,7 @@ import { DeathCoordinates } from "./penrose/EntityDieAfterEvent/death_coordinate
 import { onChannelLeave } from "./commands/utility/channel.js";
 // Custom
 import config from "./data/config.js";
+import { triggerParadoxuiByItem } from "./gui/uiItem.js";
 
 // WorldInitializeAfter Events
 Registry();
@@ -151,3 +152,4 @@ WatchDog();
 if (config.customcommands.channel === true) {
     onChannelLeave();
 }
+triggerParadoxuiByItem();
