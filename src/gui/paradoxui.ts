@@ -13,7 +13,7 @@ import { prefixHandler } from "./guiHandler/results/prefix";
 import { statsHandler } from "./guiHandler/results/stats";
 import { chatChannelMainMenu } from "./guiHandler/results/chatChannelsMenu";
 import { managePlayerSavedLocationsHandler } from "./guiHandler/guiHandlerModeration/results/managePlayersSavedLocations";
-
+import { giveParadoxUiItemFunc } from "./guiHandler/results/giveUIItem";
 /**
  * @name paradoxui
  * @param {Player} player - Player object
@@ -46,6 +46,7 @@ async function handleParadoxUI(player: Player) {
         maingui.button("Saved Locations", "textures/items/compass_item");
         maingui.button("Report", "textures/items/paper");
         maingui.button("Chat Channels", "textures/ui/mute_off");
+        maingui.button("Paradox Stick", "textures/items/stick");
     } else {
         maingui.button("Op", "textures/ui/op");
         maingui.button("Deop", "textures/items/ender_pearl");
@@ -57,6 +58,7 @@ async function handleParadoxUI(player: Player) {
         maingui.button("Stats", "textures/items/book_normal");
         maingui.button("Chat Channels", "textures/ui/mute_off");
         maingui.button("Manage Players Saved Locations", "textures/items/compass_item");
+        maingui.button("Paradox Stick", "textures/items/stick");
     }
     maingui
         .show(player)
@@ -79,6 +81,10 @@ async function handleParadoxUI(player: Player) {
                         break;
                     case 4:
                         chatChannelMainMenu(player);
+                        break;
+                    case 5:
+                        //give the player a stick named paradox
+                        giveParadoxUiItemFunc(player);
                         break;
                     default:
                         // Handle other selections for isUnique case
@@ -115,6 +121,10 @@ async function handleParadoxUI(player: Player) {
                         break;
                     case 9:
                         managePlayerSavedLocationsHandler(player);
+                        break;
+                    case 10:
+                        //give the player a stick named paradox.
+                        giveParadoxUiItemFunc(player);
                         break;
                     default:
                         // Handle other selections for non-isUnique case
