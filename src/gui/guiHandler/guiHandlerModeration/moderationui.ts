@@ -15,6 +15,7 @@ import { vanishHandler } from "./results/vanish";
 import { despawnHandler } from "./results/despawn";
 import { autobanHandler } from "./results/autoban";
 import { inventoryHandler } from "./results/inventoryui";
+import { paradoxui } from "../../paradoxui";
 
 export function moderationui(player: Player) {
     //new window for Moderation
@@ -35,6 +36,7 @@ export function moderationui(player: Player) {
     moderationui.button("Despawn entities", "textures/ui/trash");
     moderationui.button("Auto Ban", "textures/ui/hammer_l");
     moderationui.button("Inventory", "textures/blocks/chest_front");
+    moderationui.button("Back To Main Menu", "");
 
     moderationui
         .show(player)
@@ -84,6 +86,9 @@ export function moderationui(player: Player) {
                     break;
                 case 14:
                     inventoryHandler(player);
+                    break;
+                case 15:
+                    paradoxui(player);
                     break;
                 default:
                     break;
