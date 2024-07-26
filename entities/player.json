@@ -33,27 +33,27 @@
             }
         },
         "component_groups": {
-            "minecraft:add_bad_omen": {
+            "minecraft:add_raid_omen": {
                 "minecraft:spell_effects": {
                     "add_effects": [
                         {
-                            "effect": "bad_omen",
-                            "duration": 6000,
-                            "visible": false,
+                            "effect": "raid_omen",
+                            "duration": 30,
                             "display_on_screen_animation": true
                         }
-                    ]
+                    ],
+                    "remove_effects": "bad_omen"
                 },
                 "minecraft:timer": {
                     "time": [0.0, 0.0],
                     "looping": false,
                     "time_down_event": {
-                        "event": "minecraft:clear_add_bad_omen",
+                        "event": "minecraft:clear_add_raid_omen",
                         "target": "self"
                     }
                 }
             },
-            "minecraft:clear_bad_omen_spell_effect": {
+            "minecraft:clear_raid_omen_spell_effect": {
                 "minecraft:spell_effects": {}
             },
             "minecraft:raid_trigger": {
@@ -62,9 +62,6 @@
                         "event": "minecraft:remove_raid_trigger",
                         "target": "self"
                     }
-                },
-                "minecraft:spell_effects": {
-                    "remove_effects": "bad_omen"
                 }
             },
             "unvanished": {
@@ -314,17 +311,17 @@
                     "component_groups": ["unvanished"]
                 }
             },
-            "minecraft:gain_bad_omen": {
+            "minecraft:gain_raid_omen": {
                 "add": {
-                    "component_groups": ["minecraft:add_bad_omen"]
+                    "component_groups": ["minecraft:add_raid_omen"]
                 }
             },
-            "minecraft:clear_add_bad_omen": {
+            "minecraft:clear_add_raid_omen": {
                 "remove": {
-                    "component_groups": ["minecraft:add_bad_omen"]
+                    "component_groups": ["minecraft:add_raid_omen"]
                 },
                 "add": {
-                    "component_groups": ["minecraft:clear_bad_omen_spell_effect"]
+                    "component_groups": ["minecraft:clear_raid_omen_spell_effect"]
                 }
             },
             "minecraft:trigger_raid": {
