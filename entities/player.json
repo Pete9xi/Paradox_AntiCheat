@@ -255,7 +255,7 @@
                                 }
                             ]
                         },
-                        "event": "minecraft:trigger_raid"
+                        "event": "minecraft:gain_raid_omen"
                     },
                     {
                         "filters": {
