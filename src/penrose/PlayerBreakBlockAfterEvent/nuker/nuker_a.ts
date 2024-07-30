@@ -203,6 +203,7 @@ async function afternukera(
         MinecraftBlockTypes.Scaffolding,
         MinecraftBlockTypes.Slime,
         MinecraftBlockTypes.HoneyBlock,
+        MinecraftBlockTypes.Sand,
     ];
 
     const efficiencyLevels: Record<number, number> = {
