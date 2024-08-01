@@ -209,6 +209,7 @@ export default {
             minutes: 10,
             hours: 0,
             days: 0,
+            debug: false,
         },
         illegalEnchantment: {
             enabled: false,

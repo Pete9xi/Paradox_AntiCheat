@@ -4,6 +4,7 @@ import { clearItems } from "../../../data/clearlag.js";
 import { dynamicPropertyRegistry } from "../../WorldInitializeAfterEvent/registry.js";
 import config from "../../../data/config.js";
 
+const isDebugEnabled = config.modules.clearLag.debug;
 const cooldownTimer = new WeakMap();
 // Just a dummy object to use with set/get
 const object = { cooldown: "String" };
@@ -20,7 +21,13 @@ function clearEntityItems() {
     const entitiesCache = world.getDimension("overworld").getEntities(filter);
     for (const entity of entitiesCache) {
         const itemName = entity.getComponent("item");
-        if (itemName.typeId in clearItems) {
+        if (isDebugEnabled == true) {
+            console.log("Detected Items: " + itemName.itemStack.typeId);
+        }
+        if (itemName.itemStack.typeId in clearItems) {
+            if (isDebugEnabled == true) {
+                console.log("Removed Items: " + itemName.itemStack.typeId);
+            }
             entity.remove();
         }
     }
@@ -33,7 +40,13 @@ function clearEntities() {
     for (const entity of entitiesCache) {
         // Ignore entity
         if (entityException.includes(entity.typeId) || entity.nameTag) {
+            if (isDebugEnabled == true) {
+                console.log("Detected Entity Will Be Skipped: " + entity.typeId);
+            }
             continue;
+        }
+        if (isDebugEnabled == true) {
+            console.log("Removed Entity: " + entity.typeId);
         }
         entity.remove();
     }
