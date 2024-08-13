@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@minecraft/vanilla-data": "^1.21.0",
+    "@minecraft/vanilla-data": "^1.21.20",
     "crypto-es": "^2.1.0"
   },
   "overrides": {
-    "@minecraft/server": "1.12.0-beta.1.21.0-stable"
+    "@minecraft/server": "1.14.0-beta.1.21.20-stable"
   }
 }

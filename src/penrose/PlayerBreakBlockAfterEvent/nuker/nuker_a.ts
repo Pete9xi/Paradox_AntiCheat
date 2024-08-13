@@ -98,7 +98,7 @@ async function afternukera(
         MinecraftBlockTypes.LilyOfTheValley,
         MinecraftBlockTypes.OrangeTulip,
         MinecraftBlockTypes.ChorusFlower,
-        MinecraftBlockTypes.YellowFlower,
+        MinecraftBlockTypes.Dandelion,
         MinecraftBlockTypes.WitherRose,
         MinecraftBlockTypes.Sunflower,
         MinecraftBlockTypes.Lilac,
