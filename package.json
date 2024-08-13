@@ -23,7 +23,9 @@
         "@minecraft/server-ui": "1.3.0-beta.1.21.20-stable"
     },
     "overrides": {
-        "@minecraft/server": "1.14.0-beta.1.21.20-stable"
+        "@minecraft/server-ui": {
+            "@minecraft/server": "1.14.0-beta.1.21.20-stable"
+        }
     },
     "prettier": {
         "trailingComma": "es5",
