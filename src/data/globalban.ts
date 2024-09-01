@@ -515,4 +515,5 @@ export const banplayer = [
     { name: "Kuulazikk" },
     { name: "Mindofmathew856" },
     { name: "zysamf" },
+    { name: "shugidog1981"},
 ];
